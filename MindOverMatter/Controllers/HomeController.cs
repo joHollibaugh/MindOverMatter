@@ -10,7 +10,12 @@ namespace MindOverMatter.Controllers
     {
         public IActionResult Index()
         {
-            return null;
+            return View();
+        }
+        [HttpPost]
+        public void Test()
+        {
+            //do something
         }
     }
 }

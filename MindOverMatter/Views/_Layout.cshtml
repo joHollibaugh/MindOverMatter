@@ -8,6 +8,13 @@
     <script src="@ViewBag.JavaScript"></script>
 </head>
 <body>
+    <div id="topBar">
+        <div id="navBar">
+            <asp:Button CssClass="navItem" ID="btnHome" href="~/Home.aspx" runat="server" Text="Home" />
+            @Html.ActionLink("Home", "Index", "Home");
+        </div>
+    </div>
+
     <div>
         @RenderBody()
     </div>
