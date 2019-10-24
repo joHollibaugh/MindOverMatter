@@ -1,0 +1,19 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/_Layout.cshtml";
+}
+
+<h2>Mind Over Matter</h2>
+<div id="topBar">
+    <div id="Header">
+        <span id="headerText">
+            Welcome to MathWiz!
+        </span>
+    </div>
+    <div id="navBar">
+        <asp:Button CssClass="navItem" ID="btnHome" href="~/Home.aspx" runat="server" Text="Home" />
+        @Html.ActionLink("Home", "Index", "Home");
+    </div>
+</div>
+
