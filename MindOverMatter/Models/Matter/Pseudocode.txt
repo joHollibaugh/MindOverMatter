@@ -1,0 +1,117 @@
+﻿
+
+//The compound could be a collection of nodes or something
+Public List<Chain> GetStartingPoints(Compound theCompound){
+
+	List<Chain> allChains = new List<Chain>();
+	foreach(Node n in theCompound){
+		if(n.Paths == 1)
+		{
+			allChains.Add(new Chain(n))
+		}
+	}
+	return StartingNodes;
+}
+
+//Method call can be something compact like this SortChains(GetStartingPoints(DOM.TheCompound))
+//Assuming that each node has a reference to the nodes around it and whether or not it is divergent the following should work
+
+Public Chain SortChains(List<Chain> allChains)
+{
+	List<Chain> sideChains = new List<Chain>();
+	List<Chain> parentChainSegments = new List<Chain>();
+	int sideChainsFound = 0;
+
+	//Hypothetically this method will leave us with 2 Chains that will combine to form the parent chain
+	while(sideChainsFound + 2 != allChains.Length){
+		foreach(Chain c in allChains)
+		{
+			//If parent chain is true or false we have determined the chains place and it can be skipped
+			if(c.IsParentChain == null)
+			{
+				//The 
+				c.NodeList.Add(SelectedNode);
+
+				//This should run all the logic in StepForward() which is found in the Chain Class.
+				if(!c.SelectedNode.StepForward() && sideChainsFound + 2 != allChains.Length)
+				{
+					c.IsParentChain = false;
+					sideChains.Add(c);
+
+					//Removing the chains that don't step forwards will probably require the use of regular for loops unless you guys know a trick
+					//I'm towards the end of this code burst so I'm getting lazy rn..
+					allChains.Remove(c);
+
+					sideChainsFound ++;
+				} else if(!c.SelectedNode.StepForward && sideChainsFound + 2 == allChains.Length)
+				{
+					//Once the program gets here we just need it to add the 2 segments together to create the parent chain, all side chains are identified
+					//and ready to be named.
+					//My hope is that once the program arrives here we have accomplished receiving a bunch of nodes from Jo and coordinating them into a highly useable
+					//collection of side chains and the parent chain.
+					//The next step would be naming each piece followed by determining the whole name and finally sending the data back to Jo's UI.
+					//Hopefully this works when I try to implement it in actual code (fingers crossed)
+					parentChainSegments.Add(c)
+				}
+			}
+		}
+	}
+}
+
+
+public class Chain{
+
+	public Chain(Node SelectedNode) {
+		this.SelectedNode = SelectedNode;
+	}
+
+	Node SelectedNode { get; set; }
+	List<Node> NodeList { get; set; }
+	Boolean IsParentChain { get; set; }
+
+	public boolean StepForward()
+	{
+		SelectedNode.Scanned = true;
+		boolean isNodeChanged = false;
+		foreach(Node n in SelectedNode.Neighbors)
+		{
+			//This is only true for an unscanned linear node
+			if(!node.Scanned && !node.Divergent)
+			{
+				SelectedNode = node;
+				isNodeChanged = true;
+			}
+			if(node.Divergent)
+			{
+				//Check how many paths it has and then use that info to see if the other paths have already scanned the node
+				//If the other paths have arrived and been dropped as possible parent chains 
+			}
+		}
+		return isNodeChanged;
+	}
+}
+
+
+public class Node
+{
+	//So I figure the best way to generate node data is going to be through the GUI JS.
+	//For example we can probably number everything effectively on a logical basis, but as new neighbors/paths are created we may
+	//want to check if it begins a branch and adds a path to an existing molecule
+	public Node(int Sequence, int Paths, Molecule molecule)
+	{
+		//Instantiate
+	}
+
+	int NodeId
+	//Methene, hydroxide, ect
+	Molecule molecule { get; set; }
+	//One for each non-hydrogen bond
+	int Paths { get; set; }
+	//To be used later on to reduce math with the Paths
+	Boolean Divergent { get; set; }
+	List<Node> Neighbors { get; set; }
+	Boolean Scanned { get; set; }
+
+
+	
+}
