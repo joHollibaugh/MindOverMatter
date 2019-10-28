@@ -1,0 +1,56 @@
+﻿* {
+    margin:0px;
+}
+body {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+    body::after {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        content: "";
+        background: url("../Images/Chemistry-Background.jpg");
+        background-size:cover;
+        background-repeat: no-repeat;
+        opacity: 0.5;
+        z-index: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -10000;
+    }
+#topBar {
+    width: 100%;
+    background: linear-gradient(to top, #000428, #004e92, #000428);
+    height: 140px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 15px;
+    padding-right: 15px;
+    color: #fff;
+}
+#HeaderName{
+    font-size:3em;
+    font-weight:bold;
+
+                }
+#wrapper{
+    width:80%;
+    margin:auto;
+}
+#navBar{
+    width:100%;
+    height:40px;
+    background:#000;
+
+}
+canvas[resize]{
+    width:100%;
+    height:100%;
+}

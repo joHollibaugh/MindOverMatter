@@ -5,18 +5,39 @@
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
     <link rel="stylesheet" href="@ViewBag.Style" type="text/css" />
+    <link rel="stylesheet" href="~/Home/Home.css" type="text/css"/>
     <script src="@ViewBag.JavaScript"></script>
+    <script src="~/External/paper-full.min.js" type="text/javascript" ></script>
+    <script src="~/Home/CanvasTest.js" type="text/paperscript" canvas="theCanvas"></script>
 </head>
 <body>
     <div id="topBar">
+        <div id="LeftHeader">
+            <label id="userInfo">Lorem Ipsum</label>
+        </div>
+        <div id="CenterHeeader">
+            <label id="HeaderName">Mind Over Matter</label>
+        </div>
+        <div id="RightHeader">
+            <span id="Ver">
+                Version 1.0
+            </span>
+            <span id="Date">
+                10/28/2019
+            </span>
+        </div>
+    </div>
+    <div id="wrapper">
         <div id="navBar">
             <asp:Button CssClass="navItem" ID="btnHome" href="~/Home.aspx" runat="server" Text="Home" />
             @Html.ActionLink("Home", "Index", "Home");
         </div>
+        <div>
+            @RenderBody()
+        </div>
     </div>
+    <div id="footer">
 
-    <div>
-        @RenderBody()
     </div>
 </body>
 </html>
