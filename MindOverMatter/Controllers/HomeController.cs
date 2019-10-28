@@ -12,10 +12,11 @@ namespace MindOverMatter.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public void Test()
         {
-            //do something
+           
         }
     }
 }
