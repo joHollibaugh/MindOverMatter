@@ -7,7 +7,7 @@ namespace MindOverMatter.Models.Matter
 {
     public class Carbon
     {
-        List<Carbon> Bonds { get; set; }
+        List<int> BondedId { get; set; }
         int Id { get; set; }
         int Position { get; set; }
     }
