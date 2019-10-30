@@ -15,7 +15,7 @@ namespace MindOverMatter.Models.Matter
 
         [Required]
         [Key]
-        public int NodeId { get; set; }
+        public string NodeId { get; set; }
         public Atom Atom { get; set; }
         public int Scans { get; set; }
         public Boolean Divergent { get; set; }
