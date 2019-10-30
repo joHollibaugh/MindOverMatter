@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MindOverMatter.Models.ChemicalDbContext;
+using MindOverMatter.Models.DbContexts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
