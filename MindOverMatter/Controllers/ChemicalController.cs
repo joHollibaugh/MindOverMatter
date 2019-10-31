@@ -15,5 +15,14 @@ namespace MindOverMatter.Controllers
         {
             _context = context;
         }
+
+        [HttpPost]
+        public string GetMoleculeName(string CH3List)
+        {
+            
+            string Name = "Butane";
+
+            return Name;
+        }
     }
 }
