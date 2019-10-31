@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MindOverMatter.Models.ChemicalDbContext
+namespace MindOverMatter.Models.DbContexts
 {
     public class ChemicalDbContext : DbContext
     {
