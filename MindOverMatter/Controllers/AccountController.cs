@@ -14,6 +14,7 @@ namespace MindOverMatter.Controllers
 
             return View(isInvalid);
         }
+
         public IActionResult Register()
         {
             return View();
@@ -38,6 +39,7 @@ namespace MindOverMatter.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
         [HttpPost]
         public IActionResult LoginUser(User user)
         {
