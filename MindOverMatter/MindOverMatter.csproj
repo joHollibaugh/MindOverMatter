@@ -5,10 +5,33 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20191102011718_AddMoleculeUpdate.cs" />
+    <Compile Remove="Migrations\20191102011718_AddMoleculeUpdate.Designer.cs" />
+    <Compile Remove="Migrations\20191102015616_FixKeys.cs" />
+    <Compile Remove="Migrations\20191102015616_FixKeys.Designer.cs" />
+    <Compile Remove="Migrations\20191102020646_FixKeys.cs" />
+    <Compile Remove="Migrations\20191102020646_FixKeys.Designer.cs" />
+    <Compile Remove="Migrations\20191102022745_FixNode3.cs" />
+    <Compile Remove="Migrations\20191102022745_FixNode3.Designer.cs" />
+    <Compile Remove="Migrations\20191102024112_FixNode3.cs" />
+    <Compile Remove="Migrations\20191102024112_FixNode3.Designer.cs" />
+    <Compile Remove="Migrations\20191102024229_FixNode3.cs" />
+    <Compile Remove="Migrations\20191102024229_FixNode3.Designer.cs" />
+    <Compile Remove="Migrations\20191102082045_AddNodeChains.cs" />
+    <Compile Remove="Migrations\20191102082045_AddNodeChains.Designer.cs" />
+    <Compile Remove="Migrations\20191102083413_NodeLinkingTableKeys.cs" />
+    <Compile Remove="Migrations\20191102083413_NodeLinkingTableKeys.Designer.cs" />
+    <Compile Remove="Migrations\20191102083703_NodeLinkingTableKeys.cs" />
+    <Compile Remove="Migrations\20191102083703_NodeLinkingTableKeys.Designer.cs" />
+    <Compile Remove="Migrations\20191102085039_NodeLinkingTableKeys.cs" />
+    <Compile Remove="Migrations\20191102085039_NodeLinkingTableKeys.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.1.6" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.1.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
   </ItemGroup>
