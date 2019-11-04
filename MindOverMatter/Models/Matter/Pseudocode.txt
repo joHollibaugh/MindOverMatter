@@ -1,7 +1,7 @@
 ﻿
 
 //The compound could be a collection of nodes or something
-Public List<Chain> GetStartingPoints(Compound theCompound){
+Public List<Chain> GetStartingPoints(Molecule theMolecule){
 
 	List<Chain> allChains = new List<Chain>();
 	foreach(Node n in theCompound){

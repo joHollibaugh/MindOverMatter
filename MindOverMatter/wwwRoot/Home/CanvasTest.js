@@ -9,8 +9,20 @@ var PointList = new Array();
 var path;
 var circle;
 var prevCircle;
+
+$('input[id$="btnGetName"]').on('click', function () {
+    getName(paper.Molecule);
+}); 
+function getName(Mol) {
+    JSONPost("/Chemical/GetMoleculeName", { CH3List: Mol }, successCallback);
+    function successCallback(response) {
+        var data = response.d;
+        alert(data);
+
+    }
+}
+
 function onMouseDown(event) {
-    debugger;
     path = new Path();
     path.strokeColor = 'black';
     if (typeof prevCircle !== 'undefined') {
@@ -29,27 +41,39 @@ function onMouseDown(event) {
         }
         if (typeof point !== 'undefined') {
             path.add(event.downPoint, point);
-            //CRef = Molecule.find(obj => {
-            //    return obj.P === point;
-            //});
-            var C = { b: [CRef.ID], ID: "C" + event.count, P: event.downPoint }
+
+
+            CRef = Molecule.find(function (obj) {
+                return obj.Loc.x === point.x && obj.Loc.y === point.y;
+            });
+
+            var C = { b: [CRef.ID], ID: "C" + event.count, P: null, Loc: event.downPoint }
             Molecule.push(C);
             CRef.b.push(C.ID);
             circle = new Path.Circle(event.downPoint, 5);
             circle.fillColor = 'black';
             PointList.push(event.downPoint);
             prevCircle = circle;
-
         }
     }
     else {
-        debugger;
-            circle = new Path.Circle(event.downPoint, 5);
-            circle.fillColor = 'black';
-            prevCircle = circle;
+        circle = new Path.Circle(event.downPoint, 5);
+        circle.fillColor = 'black';
+        prevCircle = circle;
         PointList.push(event.downPoint);
-        var C = { b: new Array(), ID: "C" + event.count, P: null, Loc: event.downPoint}
+        var C = { b: new Array(), ID: "C" + event.count, P: null, Loc: event.downPoint };
         Molecule.push(C);
 
     }
 }
+$.ajaxSetup({
+    global: false,
+    type: "POST"
+});
+
+
+
+
+
+
+
