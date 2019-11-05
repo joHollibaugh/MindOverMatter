@@ -72,8 +72,9 @@ namespace MindOverMatter.Migrations
 
             modelBuilder.Entity("MindOverMatter.Models.Matter.Node", b =>
                 {
-                    b.Property<string>("NodeId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("NodeId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int?>("AtomId");
 
@@ -84,6 +85,8 @@ namespace MindOverMatter.Migrations
                     b.Property<bool>("Divergent");
 
                     b.Property<bool>("Linear");
+
+                    b.Property<string>("NodeTag");
 
                     b.Property<bool>("Outer");
 
@@ -100,7 +103,7 @@ namespace MindOverMatter.Migrations
                 {
                     b.Property<int>("ChainId");
 
-                    b.Property<string>("NodeId");
+                    b.Property<int>("NodeId");
 
                     b.HasKey("ChainId", "NodeId");
 
@@ -114,11 +117,11 @@ namespace MindOverMatter.Migrations
 
             modelBuilder.Entity("MindOverMatter.Models.Matter.NodeNeighbor", b =>
                 {
-                    b.Property<string>("NodeId");
+                    b.Property<int>("NodeId");
 
-                    b.Property<string>("NeighborNodeId");
+                    b.Property<int>("NeighborId");
 
-                    b.HasKey("NodeId", "NeighborNodeId");
+                    b.HasKey("NodeId", "NeighborId");
 
                     b.ToTable("NodeNeighbors");
                 });
@@ -144,7 +147,7 @@ namespace MindOverMatter.Migrations
             modelBuilder.Entity("MindOverMatter.Models.Matter.NodeChain", b =>
                 {
                     b.HasOne("MindOverMatter.Models.Matter.Chain")
-                        .WithOne("nodeChain")
+                        .WithOne("NodeChain")
                         .HasForeignKey("MindOverMatter.Models.Matter.NodeChain", "ChainId")
                         .OnDelete(DeleteBehavior.Cascade);
 

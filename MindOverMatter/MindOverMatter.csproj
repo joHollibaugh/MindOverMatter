@@ -25,6 +25,12 @@
     <Compile Remove="Migrations\20191102083703_NodeLinkingTableKeys.Designer.cs" />
     <Compile Remove="Migrations\20191102085039_NodeLinkingTableKeys.cs" />
     <Compile Remove="Migrations\20191102085039_NodeLinkingTableKeys.Designer.cs" />
+    <Compile Remove="Migrations\20191105003213_NewMigration.cs" />
+    <Compile Remove="Migrations\20191105003213_NewMigration.Designer.cs" />
+    <Compile Remove="Migrations\20191105003933_NewMigration.cs" />
+    <Compile Remove="Migrations\20191105003933_NewMigration.Designer.cs" />
+    <Compile Remove="Migrations\20191105004005_NewMigration.cs" />
+    <Compile Remove="Migrations\20191105004005_NewMigration.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -9,6 +9,6 @@ namespace MindOverMatter.Models.Matter
     public class NodeChain
     {
         public int ChainId { get; set; }
-        public string NodeId { get; set; }
+        public int NodeId { get; set; }
     }
 }

@@ -14,29 +14,34 @@ namespace MindOverMatter.Models.Matter
             Neighbors = new List<Node>();
             Branches = new List<Chain>();
             BranchCount = 0;
+            nodeChains = new List<NodeChain>();
         }
 
-        public Node(string id)
+        public Node(int id)
         {
             Neighbors = new List<Node>();
             Branches = new List<Chain>();
             NodeId = id;
             BranchCount = 0;
+            nodeChains = new List<NodeChain>();
         }
 
-        public Node(string id, List<Node> neighbors)
+        public Node(int id, List<Node> neighbors)
         {
             Branches = new List<Chain>();
             NodeId = id;
             Neighbors = neighbors;
             BranchCount = neighbors.Count;
+            nodeChains = new List<NodeChain>();
         }
 
-        //Properties
         [Required]
         [Key]
-        public string NodeId { get; set; }
+        public int NodeId { get; set; }
+        public string NodeTag { get; set; }
+        //Properties
         public Atom Atom { get; set; }
+        //The number of bonds extending from this node
         public int BranchCount { get; set; }
 
         //Node "Types" are based off of the number of branches
@@ -122,6 +127,11 @@ namespace MindOverMatter.Models.Matter
                 }
             }
             return hasNeighbor;
+        }
+
+        public void SetBranchCount()
+        {
+            BranchCount = Neighbors.Count;
         }
     }
 }

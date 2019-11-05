@@ -10,8 +10,8 @@ using MindOverMatter.Models.DbContexts;
 namespace MindOverMatter.Migrations
 {
     [DbContext(typeof(ChemicalDbContext))]
-    [Migration("20191102024740_FixNode3")]
-    partial class FixNode3
+    [Migration("20191105010802_NewMigration")]
+    partial class NewMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -50,6 +50,8 @@ namespace MindOverMatter.Migrations
 
                     b.Property<bool>("Parent");
 
+                    b.Property<bool>("Side");
+
                     b.HasKey("ChainId");
 
                     b.HasIndex("MoleculeId");
@@ -72,18 +74,23 @@ namespace MindOverMatter.Migrations
 
             modelBuilder.Entity("MindOverMatter.Models.Matter.Node", b =>
                 {
-                    b.Property<string>("NodeId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("NodeId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int?>("AtomId");
+
+                    b.Property<int>("BranchCount");
 
                     b.Property<int?>("ChainId");
 
                     b.Property<bool>("Divergent");
 
-                    b.Property<string>("NodeNeighborNeighborNodeId");
+                    b.Property<bool>("Linear");
 
-                    b.Property<string>("NodeNeighborNodeId");
+                    b.Property<string>("NodeTag");
+
+                    b.Property<bool>("Outer");
 
                     b.HasKey("NodeId");
 
@@ -91,18 +98,32 @@ namespace MindOverMatter.Migrations
 
                     b.HasIndex("ChainId");
 
-                    b.HasIndex("NodeNeighborNodeId", "NodeNeighborNeighborNodeId");
-
                     b.ToTable("Nodes");
+                });
+
+            modelBuilder.Entity("MindOverMatter.Models.Matter.NodeChain", b =>
+                {
+                    b.Property<int>("ChainId");
+
+                    b.Property<int>("NodeId");
+
+                    b.HasKey("ChainId", "NodeId");
+
+                    b.HasIndex("ChainId")
+                        .IsUnique();
+
+                    b.HasIndex("NodeId");
+
+                    b.ToTable("NodeChains");
                 });
 
             modelBuilder.Entity("MindOverMatter.Models.Matter.NodeNeighbor", b =>
                 {
-                    b.Property<string>("NodeId");
+                    b.Property<int>("NodeId");
 
-                    b.Property<string>("NeighborNodeId");
+                    b.Property<int>("NeighborId");
 
-                    b.HasKey("NodeId", "NeighborNodeId");
+                    b.HasKey("NodeId", "NeighborId");
 
                     b.ToTable("NodeNeighbors");
                 });
@@ -121,12 +142,29 @@ namespace MindOverMatter.Migrations
                         .HasForeignKey("AtomId");
 
                     b.HasOne("MindOverMatter.Models.Matter.Chain")
-                        .WithMany("ChainNodes")
+                        .WithMany("NodeList")
                         .HasForeignKey("ChainId");
+                });
 
-                    b.HasOne("MindOverMatter.Models.Matter.NodeNeighbor")
-                        .WithMany("Nodes")
-                        .HasForeignKey("NodeNeighborNodeId", "NodeNeighborNeighborNodeId");
+            modelBuilder.Entity("MindOverMatter.Models.Matter.NodeChain", b =>
+                {
+                    b.HasOne("MindOverMatter.Models.Matter.Chain")
+                        .WithOne("NodeChain")
+                        .HasForeignKey("MindOverMatter.Models.Matter.NodeChain", "ChainId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("MindOverMatter.Models.Matter.Node")
+                        .WithMany("nodeChains")
+                        .HasForeignKey("NodeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("MindOverMatter.Models.Matter.NodeNeighbor", b =>
+                {
+                    b.HasOne("MindOverMatter.Models.Matter.Node")
+                        .WithMany("nodeNeighbors")
+                        .HasForeignKey("NodeId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

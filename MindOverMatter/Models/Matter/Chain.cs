@@ -10,16 +10,18 @@ namespace MindOverMatter.Models.Matter
     {
         public Chain()
         {
-
+            NodeList = new List<Node>();
         }
         public Chain(Node n)
         {
             CurrentNode = n;
+            NodeList = new List<Node>();
         }
         public Chain(Node n, int id)
         {
             ChainId = id;
             CurrentNode = n;
+            NodeList = new List<Node>();
         }
 
         public int ChainId { get; set; }
@@ -29,7 +31,7 @@ namespace MindOverMatter.Models.Matter
         public Node CurrentNode { get; set; }
 
         //Used by Entity Framework
-        public NodeChain nodeChain { get; set; }
+        public NodeChain NodeChain { get; set; }
 
         public void AddNode(Node newNode)
         {
@@ -43,7 +45,11 @@ namespace MindOverMatter.Models.Matter
             {
                 //If this neighbor hasn't been checked and we have established a linear path (not divergent)
                 //This must be the next node
-                if (!n.IsChecked())
+                if (!n.IsDivergent() && !n.IsChecked())
+                {
+                    nextNode = n;
+                }
+                else if(n.IsDivergent())
                 {
                     nextNode = n;
                 }

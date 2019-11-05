@@ -23,16 +23,16 @@ namespace MindOverMatter.Controllers
         public string GetMoleculeName()
         {
 
-            Node c0 = new Node() { NodeId = "C0" };
-            Node c1 = new Node() { NodeId = "C1" };
-            Node c2 = new Node() { NodeId = "C2" };
-            Node c3 = new Node() { NodeId = "C3" };
-            Node c4 = new Node() { NodeId = "C4" };
-            Node c5 = new Node() { NodeId = "C5" };
-            Node c6 = new Node() { NodeId = "C6" };
+            Node c0 = new Node() { NodeTag = "C0" };
+            Node c1 = new Node() { NodeTag = "C1" };
+            Node c2 = new Node() { NodeTag = "C2" };
+            Node c3 = new Node() { NodeTag = "C3" };
+            Node c4 = new Node() { NodeTag = "C4" };
+            Node c5 = new Node() { NodeTag = "C5" };
+            Node c6 = new Node() { NodeTag = "C6" };
             c0.Neighbors = new List<Node>() { c1 };
             c1.Neighbors = new List<Node>() { c0, c2, c4 };
-            c2.Neighbors = new List<Node>() { c1, c3 };
+            c2.Neighbors = new List<Node>() { c1, c3, c5 };
             c3.Neighbors = new List<Node>() { c2 };
             c4.Neighbors = new List<Node>() { c1 };
             c5.Neighbors = new List<Node>() { c2, c6 };

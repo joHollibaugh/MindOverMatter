@@ -21,7 +21,7 @@ namespace MindOverMatter.Models.DbContexts
         public DbSet<NodeChain> NodeChains { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<NodeNeighbor>().HasKey(nn => new { nn.NodeId, nn.NeighborNodeId });
+            modelBuilder.Entity<NodeNeighbor>().HasKey(nn => new { nn.NodeId, nn.NeighborId });
             modelBuilder.Entity<NodeChain>().HasKey(nc => new { nc.ChainId, nc.NodeId });
             modelBuilder.Entity<Atom>().HasKey(x => x.AtomId);
             modelBuilder.Entity<Node>().Ignore("Neighbors");
@@ -37,13 +37,13 @@ namespace MindOverMatter.Models.DbContexts
         {
             return (Atom)Atoms.Where(x => x.Name == name);
         }
-        public Node GetNodeById(string id)
+        public Node GetNodeById(int id)
         {
             return (Node)Nodes.Where(x => x.NodeId == id);
         }
-        public List<string> GetNeighborIdsForNodeId(string id)
+        public List<int> GetNeighborIdsForNodeId(int id)
         {
-            return NodeNeighbors.Where(n => n.NodeId == id).Select(n => n.NeighborNodeId).ToList();
+            return NodeNeighbors.Where(n => n.NodeId == id).Select(n => n.NeighborId).ToList();
         }
         public int GetNewChainId()
         {

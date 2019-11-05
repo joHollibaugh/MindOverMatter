@@ -21,6 +21,7 @@ namespace MindOverMatter.Models.Utilities
             List<Node> outerNodes = new List<Node>();
             foreach (Node n in allNodes)
             {
+                n.SetBranchCount();
                 if (n.Neighbors.Count == 1)
                 {
                     outerNodes.Add(n);
@@ -38,7 +39,13 @@ namespace MindOverMatter.Models.Utilities
             Chain parentChain = new Chain();
             //Start a chain with each outer node.
             List<Chain> outerChains = new List<Chain>();
-            for(int i = 0; i < outerNodes.Count; i++) { outerChains.Add(new Chain(outerNodes[i], _context.GetNewChainId())); }
+            for(int i = 0; i < outerNodes.Count; i++)
+            {
+                outerChains.Add(new Chain(outerNodes[i]));
+                _context.Chain.Add(outerChains[i]);
+                _context.SaveChanges();
+                outerChains[i].AddNode(outerNodes[i]);
+            }
             int sideChainsFound = 0;
 
             //We will sort them into here
@@ -46,33 +53,41 @@ namespace MindOverMatter.Models.Utilities
 
             while (parentChainSegments.Count != 2)
             {
-                for (int i = 0; i <= outerChains.Count; i++)
+                for (int i = 0; i < outerChains.Count; i++)
                 {
                     if (outerChains[i].Parent == false && outerChains[i].Side == false && sideChainsFound != outerChains.Count - 2)
                     {
                         Chain c = outerChains[i];
+
                         c.CurrentNode = c.FindNextNode();
                         Node cn = c.CurrentNode;
 
                         cn.BranchCount = cn.Neighbors.Count;
+                        bool cnChecked = cn.IsChecked();
 
                         //IsDivergent will set the type(Divergent,Linear,Outer) to true
                         if (cn.IsDivergent())
                         {
                             //Checked = true --> All other branches have made it to the node
-                            if (cn.IsChecked())
+                            if (!cnChecked)
                             {
-                                //This chain is the largest to arrive at the divergent node, it continues to grow
-                                c.AddNode(cn);
-                                cn.AddBranch(c);
-                                _context.NodeChains.Add(cn.nodeChains.Last());
-                            }
-                            else if (!cn.IsChecked())
-                            {
-                                cn.AddBranch(c);
-                                _context.NodeChains.Add(cn.nodeChains.Last());
-                                //Now it gets skipped and is effectively dead to the scanner
                                 c.Side = true;
+                                //This chain is the largest to arrive at the divergent node, it continues to grow
+                                cn.AddBranch(c);
+                                if(!cn.nodeChains.Contains(new NodeChain { NodeId = cn.NodeId, ChainId = c.ChainId }))
+                                {
+                                    _context.NodeChains.Add(cn.nodeChains.Last());
+                                }
+                            }
+                            else if (cnChecked)
+                            {
+                                cn.AddBranch(c);
+                                c.AddNode(cn);
+                                if (!cn.nodeChains.Contains(new NodeChain { NodeId = cn.NodeId, ChainId = c.ChainId }))
+                                {
+                                    _context.NodeChains.Add(cn.nodeChains.Last());
+                                }
+                                //Now it gets skipped and is effectively dead to the scanner
                                 sideChainsFound++;
                             }
                             //Every node will get linked to all chains that are connected to it
@@ -81,7 +96,10 @@ namespace MindOverMatter.Models.Utilities
                         {
                             c.AddNode(cn);
                             cn.AddBranch(c);
-                            _context.NodeChains.Add(cn.nodeChains.Last());
+                            if (cn.nodeChains.Contains(new NodeChain { NodeId = cn.NodeId, ChainId = c.ChainId }) == false)
+                            {
+                                _context.NodeChains.Add(cn.nodeChains.Last());
+                            }
                         }
                         else if (cn.Outer)
                         {
