@@ -31,9 +31,10 @@
     </div>
     <div id="wrapper">
         <div id="navBar">
-            @Html.ActionLink("Home", "Index", "Home");
-            @Html.ActionLink("Login", "Login", "Account");
-            @Html.ActionLink("Register", "Register", "Account");
+            @*Do not put  a semicolon after these. They will be rendered*@
+            @Html.ActionLink("Home", "Index", "Home")
+            @Html.ActionLink("Login", "Login", "Account")
+            @Html.ActionLink("Register", "Register", "Account")
         </div>
         <div>
             @RenderBody()
