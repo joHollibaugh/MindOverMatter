@@ -1,7 +1,7 @@
 ﻿@model MindOverMatter.Models.User.User
 <h2>Register</h2>
 <p>
-    @using (Html.BeginForm("RegisterNewUser", "Account", FormMethod.Post))
+    @using (Html.BeginForm("RegisterNewUserAsync", "Account", FormMethod.Post))
     {
         @Html.LabelFor(m => m.Username, "Username: ")
         @Html.TextBoxFor(m => m.Username)

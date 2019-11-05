@@ -20,6 +20,11 @@ namespace MindOverMatter.Controllers
             scanner = new MoleculeScanner(context);
         }
 
+        [HttpPost]
+        public ActionResult getMolecule(string input)
+        {
+            return null;   
+        }
         public string GetMoleculeName()
         {
 
