@@ -11,10 +11,12 @@ var circle;
 var prevCircle;
 
 $('input[id$="btnGetName"]').on('click', function () {
+    debugger;
     getName(paper.Molecule);
 }); 
 function getName(Mol) {
-    JSONPost("/Chemical/GetMoleculeName", { CH3List: Mol }, successCallback);
+    debugger;
+    JSONPost("/Chemical/getMolecule", { input: JSON.stringify(Mol) } , successCallback);
     function successCallback(response) {
         var data = response.d;
         alert(data);
@@ -65,6 +67,7 @@ function onMouseDown(event) {
         Molecule.push(C);
 
     }
+    paper.Molecule = Molecule;
 }
 $.ajaxSetup({
     global: false,

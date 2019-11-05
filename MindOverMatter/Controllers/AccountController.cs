@@ -41,17 +41,17 @@ namespace MindOverMatter.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [HttpPost]
-        public IActionResult RegisterNewUser(User user)
-        {
-            var userStore = new UserStore<ApplicationUser>(new ProfileContext());
-            var manager = new UserManager<ApplicationUser>(userStore);
+        //[HttpPost]
+        //public IActionResult RegisterNewUser(User user)
+        //{
+        //    var userStore = new UserStore<ApplicationUser>(new ProfileContext());
+        //    var manager = new UserManager<ApplicationUser>(userStore);
 
-            var user = new ApplicationUser() { UserName = user.Username, FirstName = user.FirstName, LastName = user.LastName, Password = user.Password, Email = user.Email };
-            IdentityResult result = manager.Create(user, Password.Text);
+        //    var user = new ApplicationUser() { UserName = user.Username, FirstName = user.FirstName, LastName = user.LastName, Password = user.Password, Email = user.Email };
+        //    IdentityResult result = manager.Create(user, Password.Text);
 
-            return RedirectToAction("Index", "Home");
-        }
+        //    return RedirectToAction("Index", "Home");
+        //}
 
         [HttpPost]
         public IActionResult LoginUser(User user)
