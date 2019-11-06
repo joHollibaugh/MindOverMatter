@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MindOverMatter.Models.DbContexts;
 
 namespace MindOverMatter.Migrations
 {
     [DbContext(typeof(ChemicalDbContext))]
-    partial class ChemicalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191105035549_ChangeBranchCountToBonds")]
+    partial class ChangeBranchCountToBonds
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

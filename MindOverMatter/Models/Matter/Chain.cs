@@ -37,6 +37,15 @@ namespace MindOverMatter.Models.Matter
         {
             NodeList.Add(newNode);
         }
+
+        public void AddChain(Chain segment)
+        {
+            foreach(Node n in segment.NodeList)
+            {
+                NodeList.Add(n);
+            }
+        }
+
         public Node FindNextNode()
         {
             //Make sure all of the branches on divergent nodes have been exhausted prior to finding the next node
@@ -45,7 +54,7 @@ namespace MindOverMatter.Models.Matter
             {
                 //If this neighbor hasn't been checked and we have established a linear path (not divergent)
                 //This must be the next node
-                if (!n.IsDivergent() && !n.IsChecked())
+                if (!n.IsDivergent() && !n.Checked)
                 {
                     nextNode = n;
                 }

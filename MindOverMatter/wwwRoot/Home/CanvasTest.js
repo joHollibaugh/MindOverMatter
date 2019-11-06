@@ -14,9 +14,10 @@ $('input[id$="btnGetName"]').on('click', function () {
     debugger;
     getName(paper.Molecule);
 }); 
+
 function getName(Mol) {
     debugger;
-    JSONPost("/Chemical/getMolecule", { input: JSON.stringify(Mol) } , successCallback);
+    JSONPost("/Chemical/getMoleculeName", { input: JSON.stringify(Mol) } , successCallback);
     function successCallback(response) {
         var data = response.d;
         alert(data);

@@ -21,7 +21,8 @@ namespace MindOverMatter.Models.Utilities
             List<Node> outerNodes = new List<Node>();
             foreach (Node n in allNodes)
             {
-                n.SetBranchCount();
+                n.IsDivergent();
+                n.SetBonds();
                 if (n.Neighbors.Count == 1)
                 {
                     outerNodes.Add(n);
@@ -30,57 +31,60 @@ namespace MindOverMatter.Models.Utilities
             }
             return outerNodes;
         }
+        public List<Chain> GetStartingChains(List<Node> startingNodes)
+        {
+            List<Chain> unsortedChains = new List<Chain>();
+            for (int i = 0; i < startingNodes.Count; i++)
+            {
+                unsortedChains.Add(new Chain(startingNodes[i]));
+                _context.Chain.Add(unsortedChains[i]);
+                unsortedChains[i].AddNode(startingNodes[i]);
+                _context.SaveChanges();
+
+            }
+            return unsortedChains;
+        }
+
 
         //If it doesn't work right away I'll fix it
         //I spent 12 hours working towards this and I assume the responsibility off hammering all of my code out
-        public Chain FindLongestChain(List<Node> outerNodes)
+        public Chain FindLongestChain(List<Node> nodesIn)
         {
-            //The goal
             Chain parentChain = new Chain();
-            //Start a chain with each outer node.
-            List<Chain> outerChains = new List<Chain>();
-            for(int i = 0; i < outerNodes.Count; i++)
-            {
-                outerChains.Add(new Chain(outerNodes[i]));
-                _context.Chain.Add(outerChains[i]);
-                _context.SaveChanges();
-                outerChains[i].AddNode(outerNodes[i]);
-            }
+            List<Chain> unsortedChains = GetStartingChains(GetStartingNodes(nodesIn));
+            List<Chain> parentChainSegments = new List<Chain>();
+            List<Chain> sideChains = new List<Chain>();
             int sideChainsFound = 0;
 
-            //We will sort them into here
-            List<Chain> parentChainSegments = new List<Chain>();
-
-            while (parentChainSegments.Count != 2)
+            while (ParentChainsUnfound(parentChainSegments) && SideChainsToFind(sideChainsFound, unsortedChains.Count))
             {
-                for (int i = 0; i < outerChains.Count; i++)
+                //Loop through all unsorted chains and ignore classified chains
+                for (int i = 0; i < unsortedChains.Count; i++)
                 {
-                    if (outerChains[i].Parent == false && outerChains[i].Side == false && sideChainsFound != outerChains.Count - 2)
+                    //Classification is parent or side chain, included as boolean values of the class
+                    if (IsUnclassified(unsortedChains[i]) && sideChainsFound != unsortedChains.Count - 2)
                     {
-                        Chain c = outerChains[i];
+                        Chain c = unsortedChains[i];
+                        //Finding the next node in line for the chain
+                        Node cn = c.CurrentNode = c.FindNextNode();
 
-                        c.CurrentNode = c.FindNextNode();
-                        Node cn = c.CurrentNode;
-
-                        cn.BranchCount = cn.Neighbors.Count;
-                        bool cnChecked = cn.IsChecked();
-
-                        //IsDivergent will set the type(Divergent,Linear,Outer) to true
-                        if (cn.IsDivergent())
+                        if (cn.Divergent)
                         {
-                            //Checked = true --> All other branches have made it to the node
+                            bool cnChecked = cn.IsLastArrival();
+                            //Checked = true --> Largest Branch converging at this node identified
+                            //Checked = false --> Side Chain identified
                             if (!cnChecked)
                             {
                                 c.Side = true;
-                                //This chain is the largest to arrive at the divergent node, it continues to grow
                                 cn.AddBranch(c);
-                                if(!cn.nodeChains.Contains(new NodeChain { NodeId = cn.NodeId, ChainId = c.ChainId }))
+                                if (!cn.nodeChains.Contains(new NodeChain { NodeId = cn.NodeId, ChainId = c.ChainId }))
                                 {
                                     _context.NodeChains.Add(cn.nodeChains.Last());
                                 }
                             }
                             else if (cnChecked)
                             {
+                                //This chain is the largest to arrive at the divergent node, it continues to grow
                                 cn.AddBranch(c);
                                 c.AddNode(cn);
                                 if (!cn.nodeChains.Contains(new NodeChain { NodeId = cn.NodeId, ChainId = c.ChainId }))
@@ -106,9 +110,9 @@ namespace MindOverMatter.Models.Utilities
                             //something went wrong
                         }
                     }
-                    else if (sideChainsFound == outerChains.Count - 2)
+                    else if (!SideChainsToFind(sideChainsFound, unsortedChains.Count))
                     {
-                        foreach (Chain c in outerChains)
+                        foreach (Chain c in unsortedChains)
                         {
                             if (c.Parent == false && c.Side == false)
                             {
@@ -119,43 +123,39 @@ namespace MindOverMatter.Models.Utilities
                     }
                 }
             }
-            bool finished = false;
-            while (finished == false)
-            {
-                //If each segment is not on the same node upon arrival
-                if (parentChainSegments[0].CurrentNode != parentChainSegments[1].CurrentNode)
-                {
-                    //All branches have been eliminated and the remaining nodes between each parent segment are linear
-                    //Find the next node on one half
-                    Node SegmentOneNextNode = parentChainSegments[0].FindNextNode();
-                    if (parentChainSegments[1].CurrentNode != SegmentOneNextNode)
-                    {
-                        //If the next node is a neighbor of the second chain we have scanned then we can combine and return them
-                        if (SegmentOneNextNode.HasNeighbor(parentChainSegments[1].CurrentNode))
-                        {
-                            finished = true;
-                        }
-                        parentChainSegments[0].AddNode(SegmentOneNextNode);
-                        SegmentOneNextNode.AddBranch(parentChainSegments[0]);
-                        parentChainSegments[0].CurrentNode = SegmentOneNextNode;
-                    }
-                    //If the next node lands in segment 2 we can combine them and return
-                    else if(parentChainSegments[1].CurrentNode == SegmentOneNextNode)
-                    {
-                        finished = true;
-                    }
-                }
-
-                if(finished == true)
-                {
-                    parentChain = parentChainSegments[1];
-                    foreach(Node n in parentChainSegments[0].NodeList)
-                    {
-                        parentChain.NodeList.Add(n);
-                    }
-                }
-            }
+            parentChainSegments[0].AddChain(parentChainSegments[1]);
+            parentChain = parentChainSegments[0];
             return parentChain;
+        }
+
+
+        public bool ParentChainsUnfound(List<Chain> parentSegments)
+        {
+            if (parentSegments.Count == 2)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool IsUnclassified(Chain c)
+        {
+            if (c.Parent == false && c.Side == false)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool SideChainsToFind(int found, int chainCount)
+        {
+            if(found + 2 == chainCount)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }
+
+
