@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft;
+using Newtonsoft.Json;
 
 namespace MindOverMatter.Controllers
 {
@@ -23,7 +25,31 @@ namespace MindOverMatter.Controllers
         [HttpPost]
         public ActionResult getMolecule(string input)
         {
-            return null;   
+            List<ConvertableMol> Clist = JsonConvert.DeserializeObject<List<ConvertableMol>>(input);
+            var map = new Dictionary<string, String[]>();
+            List<Node> nodeList = new List<Node>();
+            List<Node> convertedList = new List<Node>();
+            foreach (ConvertableMol C in Clist)
+            {                
+                Node n = new Node() { NodeTag = C.ID };
+                nodeList.Add(n);
+                map.Add(n.NodeTag, C.b);
+            }
+            foreach (var pair in map)
+            {
+                List<Node> _neighbors = new List<Node>();
+                Node n = nodeList.Find(x => x.NodeTag == pair.Key);
+                foreach (string s in pair.Value)
+                {
+                    _neighbors.Add(nodeList.Find(x => x.NodeTag == pair.Key));
+                }
+                if (_neighbors.Count >= 1) ;
+                n.Neighbors = _neighbors;
+                convertedList.Add(n);
+            }
+            Chain parentChain = scanner.FindLongestChain(convertedList);
+            var _map = new Dictionary<string, String[]>();
+            return Content("Works");   
         }
         public string GetMoleculeName()
         {

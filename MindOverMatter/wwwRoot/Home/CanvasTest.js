@@ -26,13 +26,14 @@ var circle;
 var prevCircle;
 
 $('input[id$="btnGetName"]').on('click', function () {
-    debugger;
     getName(paper.Molecule);
 }); 
 
 function getName(Mol) {
-    debugger;
-    JSONPost("/Chemical/getMoleculeName", { input: JSON.stringify(Mol) } , successCallback);
+    Mol.Neighbors = Mol.b;
+    Mol.NodeID = Mol.ID;
+
+    JSONPost("/Chemical/getMolecule", { input: JSON.stringify(Mol) } , successCallback);
     function successCallback(response) {
         var data = response.d;
         alert(data);
