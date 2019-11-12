@@ -1,15 +1,18 @@
 ﻿@model MindOverMatter.Models.User.User
 <h2>Login</h2>
+@if (Model.Errors != null)
+{
+    <p class="error">@Model.Errors.ToList()[0].Code</p>
+}
 <p>
-    <h3></h3>
-    @using (Html.BeginForm("LoginUser", "Account","FormMethod.Post"))
+    @using (Html.BeginForm("LoginUser", "Account", "FormMethod.Post"))
     {
-    @Html.LabelFor(m => m.Username, "Username: ")
-    @Html.TextBoxFor(m => m.Username)
-    <br />
-    @Html.LabelFor(m => m.Password, "Password: ")
-    @Html.TextBoxFor(m => m.Password)
-    <input type="submit" value="Attempt Login" />
+        @Html.LabelFor(m => m.Username, "Username: ")
+        @Html.TextBoxFor(m => m.Username)
+        <br />
+        @Html.LabelFor(m => m.Password, "Password: ")
+        @Html.TextBoxFor(m => m.Password)
+        <input type="submit" value="Attempt Login" />
     }
 </p>
 

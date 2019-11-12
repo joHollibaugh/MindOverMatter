@@ -12,11 +12,7 @@ namespace MindOverMatter.Controllers
         {
             return View();
         }
-        public IActionResult SignOut()
-        {
-            
-            return Index();
-        }
+       
 
         [HttpPost]
         public void Test()

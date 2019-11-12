@@ -23,50 +23,90 @@ namespace MindOverMatter.Controllers
             _signInManager = signInManager;
         }
 
-        public IActionResult Login(bool isInvalid = false)
+        public IActionResult Login(IdentityError error)
         {
             User user = new User();
-            user.IsInvalid = isInvalid;
+            user.Errors = new List<IdentityError>() { error };
             return View(user);
         }
 
         public IActionResult Register()
         {
-            return View();
+            User user = new User();
+            return View("Register", user);
         }
 
-        public IActionResult SignOut()
+        public async Task<IActionResult> SignOutAsync()
         {
-            // var authenticationManager = HttpContext.Current.GetOwinContext().Authentication;
-            // authenticationManager.SignOut();
-
+            await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
-
+        private bool IsNullOrEmpty(string stringValue)
+        {
+            if(stringValue == null || stringValue.Trim() == "")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         [HttpPost]
         public async Task<IActionResult> RegisterNewUserAsync(User user)
         {
             var newUser = new ApplicationUser() { UserName = user.Username, FirstName = user.FirstName, LastName = user.LastName, Email = user.Email };
-            IdentityResult result = await _userManager.CreateAsync(newUser, user.Password);
-
-            return RedirectToAction("Index", "Home");
-        }
-
-        [HttpPost]
-        public IActionResult LoginUser(User user)
-        {
-            var appUser = new ApplicationUser() { UserName = user.Username, FirstName = user.FirstName, LastName = user.LastName, Email = user.Email };
-            var test = _signInManager.PasswordSignInAsync(appUser,user.Password,false,false);
-
-            if (User.Identity.IsAuthenticated)
+            IdentityResult result;
+            if (newUser != null)
             {
-                return RedirectToAction("Index", "~/Controllers/Home");
+                List<IdentityError> errorList = new List<IdentityError>();
+                if (IsNullOrEmpty(newUser.Email)) { errorList.Add(new IdentityError() { Description = "No Email Provided" }); }
+                if (IsNullOrEmpty(newUser.UserName)) { errorList.Add(new IdentityError() { Description = "No Username Provided" }); }
+                if (IsNullOrEmpty(newUser.LastName)) { errorList.Add(new IdentityError() { Description = "No Last Name Provided" }); }
+                if (IsNullOrEmpty(newUser.FirstName)) { errorList.Add(new IdentityError() { Description = "No First Name Provided" }); }
+                if (IsNullOrEmpty(user.Password)) { errorList.Add(new IdentityError() { Description = "No Password Provided" }); }
+
+
+                if (errorList.Count() <= 0)
+                {
+                    result = await _userManager.CreateAsync(newUser, user.Password);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        return View("Register", new User() { Errors = result.Errors });
+                    }
+                }
+                else
+                {
+                    return View("Register", new User() { Errors = errorList });
+                }
             }
             else
             {
-                return View("Login", new User() { IsInvalid = true });
+                return View("Register", new User() { Errors = new List<IdentityError>() { new IdentityError() { Description = "Error Attempting To Create New User Try Again Later" } } });
             }
-            
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> LoginUser(User user)
+        {
+          
+            var signInResult = await _signInManager.PasswordSignInAsync(user.Username, user.Password, true, false);
+            if (signInResult.Succeeded)
+            {
+                var test = HttpContext;
+                return RedirectToAction("Index", "Home");
+                
+            }
+            else
+            {
+                return View("Login", new User() { Errors = new List<IdentityError> { new IdentityError() { Code = "Invalid Username or password" } } });
+            }
+
         }
     }
 }
