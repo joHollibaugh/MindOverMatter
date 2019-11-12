@@ -41,14 +41,13 @@ namespace MindOverMatter.Controllers
                 Node n = nodeList.Find(x => x.NodeTag == pair.Key);
                 foreach (string s in pair.Value)
                 {
-                    _neighbors.Add(nodeList.Find(x => x.NodeTag == pair.Key));
+                    _neighbors.Add(nodeList.Find(x => x.NodeTag == s));
                 }
-                if (_neighbors.Count >= 1) ;
+                if (_neighbors.Count >= 1);
                 n.Neighbors = _neighbors;
                 convertedList.Add(n);
             }
             Chain parentChain = scanner.FindLongestChain(convertedList);
-            var _map = new Dictionary<string, String[]>();
             return Content("Works");   
         }
         public string GetMoleculeName()

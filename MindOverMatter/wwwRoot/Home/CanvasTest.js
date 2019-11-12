@@ -23,6 +23,8 @@ var Molecule = new Array();
 var PointList = new Array();
 var path;
 var circle;
+var _circle;
+
 var prevCircle;
 
 $('input[id$="btnGetName"]').on('click', function () {
