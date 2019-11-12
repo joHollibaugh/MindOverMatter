@@ -13,7 +13,7 @@ namespace MindOverMatter.Models.Matter
         {
             Neighbors = new List<Node>();
             Branches = new List<Chain>();
-            Bonds = 0;
+            BranchCount = 0;
             nodeChains = new List<NodeChain>();
         }
 
@@ -22,7 +22,7 @@ namespace MindOverMatter.Models.Matter
             Neighbors = new List<Node>();
             Branches = new List<Chain>();
             NodeId = id;
-            Bonds = 0;
+            BranchCount = 0;
             nodeChains = new List<NodeChain>();
         }
 
@@ -31,7 +31,7 @@ namespace MindOverMatter.Models.Matter
             Branches = new List<Chain>();
             NodeId = id;
             Neighbors = neighbors;
-            Bonds = neighbors.Count;
+            BranchCount = neighbors.Count;
             nodeChains = new List<NodeChain>();
         }
 
@@ -42,7 +42,7 @@ namespace MindOverMatter.Models.Matter
         //Properties
         public Atom Atom { get; set; }
         //The number of bonds extending from this node
-        public int Bonds { get; set; }
+        public int BranchCount { get; set; }
 
         //Node "Types" are based off of the number of branches
         //Divergent >= 3
@@ -77,24 +77,24 @@ namespace MindOverMatter.Models.Matter
         public void AddNeighbor(Node newNeighbor)
         {
             Neighbors.Add(newNeighbor);
-            Bonds = Neighbors.Count();
+            BranchCount = Neighbors.Count();
         }
 
         public bool IsDivergent()
         {
-            if (Bonds > 2)
+            if (BranchCount > 2)
             {
                 Divergent = true;
             }
-            else if (Bonds <= 2)
+            else if (BranchCount <= 2)
             {
                 Divergent = false;
-                if (Bonds == 1)
+                if (BranchCount == 1)
                 {
                     Outer = true;
                     Linear = false;
                 }
-                if (Bonds == 2)
+                if (BranchCount == 2)
                 {
                     Outer = false;
                     Linear = true;
@@ -103,28 +103,15 @@ namespace MindOverMatter.Models.Matter
             return Divergent;
         }
 
-        public bool IsLastArrival()
+        public bool IsChecked()
         {
-            //Nodes are considered "Checked" by different criteria depending on how many branches they have
-            //Bonds is the total bonds and Branches is the chains that have been attached
-            switch (Bonds)
+            if (Branches.Count == BranchCount - 2)
             {
-                case 1: 
-                    Checked = true;
-                    break;
-                case 2:
-                    if(Branches.Count > 0)
-                    {
-                        Checked = true;
-                    }
-                    break;
-                case 3:
-                case 4:
-                    if(Branches.Count + 2 >= Bonds)
-                    {
-                        Checked = true;
-                    }
-                    break;
+                Checked = true;
+            }
+            else if (Branches.Count != BranchCount - 2)
+            {
+                Checked = false;
             }
             return Checked;
         }
@@ -142,9 +129,9 @@ namespace MindOverMatter.Models.Matter
             return hasNeighbor;
         }
 
-        public void SetBonds()
+        public void SetBranchCount()
         {
-            Bonds = Neighbors.Count;
+            BranchCount = Neighbors.Count;
         }
     }
 }

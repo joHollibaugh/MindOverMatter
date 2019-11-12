@@ -78,7 +78,7 @@ namespace MindOverMatter.Migrations
 
                     b.Property<int?>("AtomId");
 
-                    b.Property<int>("Bonds");
+                    b.Property<int>("BranchCount");
 
                     b.Property<int?>("ChainId");
 
