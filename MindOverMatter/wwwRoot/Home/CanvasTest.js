@@ -33,7 +33,7 @@ function getName(Mol) {
     Mol.Neighbors = Mol.b;
     Mol.NodeID = Mol.ID;
 
-    JSONPost("/Chemical/getMolecule", { input: JSON.stringify(Mol) } , successCallback);
+    JSONPost("/Chemical/GetMoleculeName", {/* input: JSON.stringify(Mol) */} , successCallback);
     function successCallback(response) {
         var data = response.d;
         alert(data);
