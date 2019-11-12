@@ -63,9 +63,10 @@ namespace MindOverMatter.Models.Utilities
                 for (int i = 0; i < unsortedChains.Count; i++)
                 {
                     //Classification is parent or side chain, included as boolean values of the class
-                    if (IsUnclassified(unsortedChains[i]) && sideChainsFound != unsortedChains.Count - 2)
+                    if (IsUnclassified(unsortedChains[i]))
                     {
                         Chain c = unsortedChains[i];
+                        c.CurrentNode.Checked = true;
                         //Finding the next node in line for the chain
                         Node cn = c.CurrentNode = c.FindNextNode();
 
@@ -82,6 +83,7 @@ namespace MindOverMatter.Models.Utilities
                                 {
                                     _context.NodeChains.Add(cn.nodeChains.Last());
                                 }
+                                sideChainsFound++;
                             }
                             else if (cnChecked)
                             {
@@ -93,7 +95,7 @@ namespace MindOverMatter.Models.Utilities
                                     _context.NodeChains.Add(cn.nodeChains.Last());
                                 }
                                 //Now it gets skipped and is effectively dead to the scanner
-                                sideChainsFound++;
+
                             }
                             //Every node will get linked to all chains that are connected to it
                         }
@@ -105,30 +107,53 @@ namespace MindOverMatter.Models.Utilities
                             {
                                 _context.NodeChains.Add(cn.nodeChains.Last());
                             }
+                            cn.Checked = true;
                         }
                         else if (cn.Outer)
                         {
                             //something went wrong
                         }
                     }
-                    else if (!SideChainsToFind(sideChainsFound, unsortedChains.Count))
+
+                }
+                if (!SideChainsToFind(sideChainsFound, unsortedChains.Count))
+                {
+                    foreach (Chain c in unsortedChains)
                     {
-                        foreach (Chain c in unsortedChains)
+                        if (c.Parent == false && c.Side == false)
                         {
-                            if (c.Parent == false && c.Side == false)
-                            {
-                                c.Parent = true;
-                                parentChainSegments.Add(c);
-                            }
+                            c.Parent = true;
+                            parentChainSegments.Add(c);
                         }
                     }
                 }
             }
+            bool finished = false;
+            while(finished == false)
+            {
+                //Line
+                if(parentChainSegments[0].CurrentNode != parentChainSegments[1].CurrentNode)
+                {
+                    Node SegmentOneNextNode = parentChainSegments[0].FindNextNode();
+                    if(parentChainSegments[1].CurrentNode != SegmentOneNextNode)
+                    {
+                        if (SegmentOneNextNode.HasNeighbor(parentChainSegments[1].CurrentNode))
+                        {
+                            finished = true;
+                        }
+                        parentChainSegments[0].AddNode(SegmentOneNextNode);
+                        SegmentOneNextNode.AddBranch(parentChainSegments[0]);
+                        parentChainSegments[0].CurrentNode = SegmentOneNextNode;
+                    }
+                    else if(parentChainSegments[1].CurrentNode == SegmentOneNextNode)
+                    {
+                        finished = true;
+                    } 
+                }
+            }
             parentChainSegments[0].AddChain(parentChainSegments[1]);
-            parentChain = parentChainSegments[0];
-            return parentChain;
+            return parentChainSegments[0];
         }
-
 
         public bool ParentChainsUnfound(List<Chain> parentSegments)
         {
