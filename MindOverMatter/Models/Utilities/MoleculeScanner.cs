@@ -131,7 +131,7 @@ namespace MindOverMatter.Models.Utilities
             bool finished = false;
             while(finished == false)
             {
-                
+                //Line
                 if(parentChainSegments[0].CurrentNode != parentChainSegments[1].CurrentNode)
                 {
                     Node SegmentOneNextNode = parentChainSegments[0].FindNextNode();
