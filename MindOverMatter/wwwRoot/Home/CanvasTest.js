@@ -23,6 +23,8 @@ var Molecule = new Array();
 var PointList = new Array();
 var path;
 var circle;
+var _circle;
+
 var prevCircle;
 
 $('input[id$="btnGetName"]').on('click', function () {
@@ -33,7 +35,7 @@ function getName(Mol) {
     Mol.Neighbors = Mol.b;
     Mol.NodeID = Mol.ID;
 
-    JSONPost("/Chemical/GetMoleculeName", {/* input: JSON.stringify(Mol) */} , successCallback);
+    JSONPost("/Chemical/getMolecule", { input: JSON.stringify(Mol) } , successCallback);
     function successCallback(response) {
         var data = response.d;
         alert(data);
