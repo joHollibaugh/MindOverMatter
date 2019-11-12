@@ -113,7 +113,7 @@ namespace MindOverMatter.Models.Matter
                     Checked = true;
                     break;
                 case 2:
-                    if(Branches.Count > 0)
+                    if(Branches.Count == 1)
                     {
                         Checked = true;
                     }
@@ -134,7 +134,7 @@ namespace MindOverMatter.Models.Matter
             bool hasNeighbor = false;
             foreach (Node neighbor in Neighbors)
             {
-                if (n.NodeId == neighbor.NodeId)
+                if (n.NodeTag == neighbor.NodeTag)
                 {
                     hasNeighbor = true;
                 }
