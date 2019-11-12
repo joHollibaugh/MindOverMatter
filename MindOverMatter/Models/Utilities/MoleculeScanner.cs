@@ -155,7 +155,6 @@ namespace MindOverMatter.Models.Utilities
             return parentChainSegments[0];
         }
 
-
         public bool ParentChainsUnfound(List<Chain> parentSegments)
         {
             if (parentSegments.Count == 2)
