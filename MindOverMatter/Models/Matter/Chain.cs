@@ -40,9 +40,9 @@ namespace MindOverMatter.Models.Matter
 
         public void AddChain(Chain segment)
         {
-            foreach(Node n in segment.NodeList)
+            for(int i = segment.NodeList.Count - 1; i >= 0; i--)
             {
-                NodeList.Add(n);
+                NodeList.Add(segment.NodeList[i]);
             }
         }
 
