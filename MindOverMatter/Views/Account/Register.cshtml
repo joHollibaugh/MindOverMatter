@@ -1,23 +1,35 @@
-﻿@model MindOverMatter.Models.User.User
+﻿@using Microsoft.AspNetCore.Identity;
+
+@model MindOverMatter.Models.User.User
+
 <h2>Register</h2>
-<p>
-    @using (Html.BeginForm("RegisterNewUserAsync", "Account", FormMethod.Post))
+
+@if (Model.Errors != null && Model.Errors.Count() > 0)
+{
+    foreach (IdentityError error in Model.Errors)
     {
-        @Html.LabelFor(m => m.Username, "Username: ")
-        @Html.TextBoxFor(m => m.Username)
-        <br />
-        @Html.LabelFor(m => m.FirstName, "First Name: ")
-        @Html.TextBoxFor(m => m.FirstName)
-        <br />
-        @Html.LabelFor(m => m.LastName, "Last Name: ")
-        @Html.TextBoxFor(m => m.LastName)
-        <br />
-        @Html.LabelFor(m => m.Email, "Email: ")
-        @Html.TextBoxFor(m => m.Email)
-        <br />
-        @Html.LabelFor(m => m.Password, "Password: ")
-        @Html.TextBoxFor(m => m.Password)
-        <input type="submit" value="submit new user" />
+        <p class="error">@error.Description</p>
     }
-</p>
+}
+
+        <p>
+            @using (Html.BeginForm("RegisterNewUserAsync", "Account", FormMethod.Post))
+            {
+                @Html.LabelFor(m => m.Username, "Username: ")
+                @Html.TextBoxFor(m => m.Username)
+                <br />
+                @Html.LabelFor(m => m.FirstName, "First Name: ")
+                @Html.TextBoxFor(m => m.FirstName)
+                <br />
+                @Html.LabelFor(m => m.LastName, "Last Name: ")
+                @Html.TextBoxFor(m => m.LastName)
+                <br />
+                @Html.LabelFor(m => m.Email, "Email: ")
+                @Html.TextBoxFor(m => m.Email)
+                <br />
+                @Html.LabelFor(m => m.Password, "Password: ")
+                @Html.TextBoxFor(m => m.Password)
+                <input type="submit" value="submit new user" />
+            }
+        </p>
 
