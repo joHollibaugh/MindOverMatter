@@ -38,14 +38,13 @@
             @*Do not put  a semicolon after these. They will be rendered*@
 
             @Html.ActionLink("Home", "Index", "Home")
-            @if (!signInManager.IsSignedIn(User))
+            @if (!User.Identity.IsAuthenticated)
             {
-                @Html.ActionLink("Login", "Login", "Account")
-                @Html.ActionLink("Register", "Register", "Account")
+                @Html.ActionLink("Login/Register", "LoginPage", "Account")
             }
             else
             {
-                @Html.ActionLink("Sign Out","SignOut","Account")
+                @Html.ActionLink("Signout","Logout","Account")
             }
 
         </div>

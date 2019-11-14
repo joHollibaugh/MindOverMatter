@@ -96,7 +96,7 @@ canvas[resize] {
     color: #fff;
     text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
 }
-input[type="button"] {
+input[type="button"],input[type="submit"] {
     border: 3px solid #fff;
     padding: 10px;
     font-size: .9em;
