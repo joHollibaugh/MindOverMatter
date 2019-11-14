@@ -79,7 +79,6 @@ namespace MindOverMatter.Models.Utilities
                             {
                                 c.Side = true;
                                 cn.AddBranch(c);
-                                c.AddNode(cn);
                                 if (!cn.nodeChains.Contains(new NodeChain { NodeId = cn.NodeId, ChainId = c.ChainId }))
                                 {
                                     _context.NodeChains.Add(cn.nodeChains.Last());
@@ -135,7 +134,7 @@ namespace MindOverMatter.Models.Utilities
                 //Line
                 if(parentChainSegments[0].CurrentNode != parentChainSegments[1].CurrentNode)
                 {
-                    Node SegmentOneNextNode = parentChainSegments[0].FindNextNode();
+                    Node SegmentOneNextNode = parentChainSegments[0].FindNextParentNode();
                     if(parentChainSegments[1].CurrentNode != SegmentOneNextNode)
                     {
                         if (SegmentOneNextNode.HasNeighbor(parentChainSegments[1].CurrentNode))

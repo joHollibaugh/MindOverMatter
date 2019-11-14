@@ -109,18 +109,42 @@ namespace MindOverMatter.Models.Matter
             //Bonds is the total bonds and Branches is the chains that have been attached
             switch (Bonds)
             {
-                case 1: 
+                case 1:
                     Checked = true;
                     break;
                 case 2:
-                    if(Branches.Count == 1)
+                    if (Branches.Count == 1 || Branches.Count == 2)
                     {
                         Checked = true;
                     }
                     break;
                 case 3:
                 case 4:
-                    if(Branches.Count + 2 >= Bonds)
+                    if (Branches.Count + 2 >= Bonds)
+                    {
+                        Checked = true;
+                    }
+                    break;
+            }
+            return Checked;
+        }
+
+        public bool IsCheckedByParent()
+        {
+            switch (Bonds)
+            {
+                case 1:
+                    Checked = true;
+                    break;
+                case 2:
+                    if (Branches.Count == 2)
+                    {
+                        Checked = true;
+                    }
+                    break;
+                case 3:
+                case 4:
+                    if (Branches.Count + 2 >= Bonds)
                     {
                         Checked = true;
                     }
