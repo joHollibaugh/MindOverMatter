@@ -1,0 +1,88 @@
+﻿@{
+    ViewBag.Style = "Account.css";
+    Layout = "~/Views/_Layout.csHtml";
+}
+@using Microsoft.AspNetCore.Identity;
+@model MindOverMatter.Models.User.User
+<div class="flexbox">
+    
+    <div class="column">
+        <h2>Login</h2>
+        <div class="error">
+            @if (Model.Errors != null)
+            {
+                @Model.Errors.ToList()[0].Code
+
+            }
+        </div>
+
+        @using (Html.BeginForm("Login", "Account", "FormMethod.Post"))
+        {
+            <table>
+                <tr>
+                    <td>
+                        @Html.LabelFor(m => m.Username, "Username: ")
+
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(m => m.Username)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.LabelFor(m => m.Password, "Password: ")
+
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(m => m.Password)
+                    </td>
+                </tr>
+            </table>
+            <input type="submit" value="Attempt Login" />
+        }
+    </div>
+    
+    <div class="column">
+        <h2>Register</h2>
+        <div class="error">
+            @if (Model.Errors != null && Model.Errors.Count() > 0)
+            {
+                foreach (IdentityError error in Model.Errors)
+                {
+                    @error.Description
+                    <br />
+                }
+            }
+        </div>
+
+
+        @using (Html.BeginForm("RegisterNewUserAsync", "Account", FormMethod.Post))
+        {
+            <table>
+                <tr>
+                    <td> @Html.LabelFor(m => m.Username, "Username: ")</td>
+                    <td> @Html.TextBoxFor(m => m.Username)</td>
+                </tr>
+                <tr>
+                    <td> @Html.LabelFor(m => m.FirstName, "First Name: ")</td>
+                    <td> @Html.TextBoxFor(m => m.FirstName)</td>
+                </tr>
+                <tr>
+                    <td> @Html.LabelFor(m => m.LastName, "Last Name: ")</td>
+                    <td> @Html.TextBoxFor(m => m.LastName)</td>
+                </tr>
+                <tr>
+                    <td> @Html.LabelFor(m => m.Email, "Email: ")</td>
+                    <td> @Html.TextBoxFor(m => m.Email)</td>
+                </tr>
+                <tr>
+                    <td> @Html.LabelFor(m => m.Password, "Password: ")</td>
+                    <td> @Html.TextBoxFor(m => m.Password)</td>
+                </tr>
+
+            </table>
+            <input type="submit" value="submit new user" />
+        }
+    </div>
+</div >
+
