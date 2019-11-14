@@ -14,30 +14,22 @@ namespace MindOverMatter.Models.Matter
             Neighbors = new List<Node>();
             Branches = new List<Chain>();
             Bonds = 0;
-            nodeChains = new List<NodeChain>();
         }
 
         public Node(int id)
         {
             Neighbors = new List<Node>();
             Branches = new List<Chain>();
-            NodeId = id;
             Bonds = 0;
-            nodeChains = new List<NodeChain>();
         }
 
         public Node(int id, List<Node> neighbors)
         {
             Branches = new List<Chain>();
-            NodeId = id;
             Neighbors = neighbors;
             Bonds = neighbors.Count;
-            nodeChains = new List<NodeChain>();
         }
 
-        [Required]
-        [Key]
-        public int NodeId { get; set; }
         public string NodeTag { get; set; }
         //Properties
         public Atom Atom { get; set; }
@@ -65,17 +57,15 @@ namespace MindOverMatter.Models.Matter
         public int Scans { get; set; }
 
 
-
-        //Used by Entity Framework
-        public List<NodeChain> nodeChains { get; set; }
-        public List<NodeNeighbor> nodeNeighbors { get; set; }
-
-
         //Methods
-        public void AddBranch(Chain newBranch)
+        public void AddBranch(Chain branch)
         {
-            Branches.Add(newBranch);
-            nodeChains.Add(new NodeChain { NodeId = NodeId, ChainId = newBranch.ChainId });
+            Chain nonReferenceBranch = new Chain();
+            foreach (Node n in branch.NodeList)
+            {
+                nonReferenceBranch.NodeList.Add(n);
+            }
+            Branches.Add(nonReferenceBranch);
         }
 
         public void AddNeighbor(Node newNeighbor)
@@ -84,27 +74,20 @@ namespace MindOverMatter.Models.Matter
             Bonds = Neighbors.Count();
         }
 
-        public bool IsDivergent()
+        public void SetType()
         {
             if (Bonds > 2)
             {
                 Divergent = true;
             }
-            else if (Bonds <= 2)
+            else if (Bonds == 1)
             {
-                Divergent = false;
-                if (Bonds == 1)
-                {
-                    Outer = true;
-                    Linear = false;
-                }
-                if (Bonds == 2)
-                {
-                    Outer = false;
-                    Linear = true;
-                }
+                Outer = true;
             }
-            return Divergent;
+            else if (Bonds == 2)
+            {
+                Linear = true;
+            }
         }
 
         public bool Scan()

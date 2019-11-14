@@ -30,9 +30,6 @@ namespace MindOverMatter.Models.Matter
         public Boolean Side { get; set; }
         public Node CurrentNode { get; set; }
 
-        //Used by Entity Framework
-        public NodeChain NodeChain { get; set; }
-
         public void AddNode(Node newNode)
         {
             NodeList.Add(newNode);
@@ -61,6 +58,19 @@ namespace MindOverMatter.Models.Matter
                     nextNode = n;
                 }
                 n.Scans++;
+            }
+            return nextNode;
+        }
+
+        public Node FindBranchLink()
+        {
+            Node nextNode = new Node();
+            foreach (Node n in CurrentNode.Neighbors)
+            {
+                if (n.Divergent && !n.Checked)
+                {
+                    nextNode = n;
+                }
             }
             return nextNode;
         }
