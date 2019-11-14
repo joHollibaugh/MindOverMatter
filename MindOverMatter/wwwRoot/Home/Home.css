@@ -112,3 +112,17 @@ input[type="button"] {
         background: #12e035;
         color: #000;
     }
+#NameBox {
+    align-content: center;
+    width: 80%;
+    margin: 60px auto 25px auto;
+    display: flex;
+    justify-content: center;
+    background: #cecece;
+    height: 50px;
+    font-size: 2em;
+    box-shadow: inset 0 0 10px #000000;
+    border: 1px solid blue;
+    color: green;
+    font-weight: 800;
+}
