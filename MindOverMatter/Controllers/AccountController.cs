@@ -23,7 +23,7 @@ namespace MindOverMatter.Controllers
             _signInManager = signInManager;
         }
 
-        public IActionResult Login(IdentityError error)
+        public IActionResult LoginPage(IdentityError error)
         {
             User user = new User();
             user.Errors = new List<IdentityError>() { error };
@@ -33,10 +33,10 @@ namespace MindOverMatter.Controllers
         public IActionResult Register()
         {
             User user = new User();
-            return View("Register", user);
+            return View("LoginPage", user);
         }
 
-        public async Task<IActionResult> SignOutAsync()
+        public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
@@ -76,31 +76,32 @@ namespace MindOverMatter.Controllers
                     }
                     else
                     {
-                        return View("Register", new User() { Errors = result.Errors });
+                        return View("LoginPage", new User() { Errors = result.Errors });
                     }
                 }
                 else
                 {
-                    return View("Register", new User() { Errors = errorList });
+                    return View("LoginPage", new User() { Errors = errorList });
                 }
             }
             else
             {
-                return View("Register", new User() { Errors = new List<IdentityError>() { new IdentityError() { Description = "Error Attempting To Create New User Try Again Later" } } });
+                return View("LoginPage", new User() { Errors = new List<IdentityError>() { new IdentityError() { Description = "Error Attempting To Create New User Try Again Later" } } });
             }
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> LoginUser(User user)
+        public async Task<IActionResult> Login(User user)
         {
-          
+          if(IsNullOrEmpty(user.Username) || IsNullOrEmpty(user.Password))
+            {
+                return View("Login", new User() { Errors = new List<IdentityError> { new IdentityError() { Code = "Must include username and password" } } });
+            }
             var signInResult = await _signInManager.PasswordSignInAsync(user.Username, user.Password, true, false);
             if (signInResult.Succeeded)
             {
-                var test = HttpContext;
                 return RedirectToAction("Index", "Home");
-                
             }
             else
             {

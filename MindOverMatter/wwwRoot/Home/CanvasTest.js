@@ -37,8 +37,33 @@ function getName(Mol) {
 
     JSONPost("/Chemical/getMolecule", { input: JSON.stringify(Mol) } , successCallback);
     function successCallback(response) {
-        var data = response.d;
-        alert(data);
+        var data = response;
+        var name;
+        switch (data){
+            case 1:
+                name = "Methane";
+                break;
+            case 2:
+                name = "Ethane";
+                break;
+            case 3:
+                name = "Propane";
+                break;
+            case 4:
+                name = "Butane";
+                break;
+            case 5:
+                name = "Pentane";
+                break;
+            case 6:
+                name = "Hexane";
+                break;
+            case 7:
+                name = "Octane";
+                break;
+
+        }
+        $('label[id$="theName"]').empty().append(name);
 
     }
 }
