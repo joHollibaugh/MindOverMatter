@@ -23,7 +23,7 @@ namespace MindOverMatter.Controllers
         }
 
         [HttpPost]
-        public ActionResult getMolecule(string input)
+        public int getMolecule(string input)
         {
             List<ConvertableMol> Clist = JsonConvert.DeserializeObject<List<ConvertableMol>>(input);
             var map = new Dictionary<string, String[]>();
@@ -47,8 +47,9 @@ namespace MindOverMatter.Controllers
                 n.Neighbors = _neighbors;
                 convertedList.Add(n);
             }
-            Chain parentChain = scanner.FindLongestChain(convertedList);
-            return Content("Works");   
+            int length = scanner._longestChain(convertedList);
+            //Chain parentChain = scanner.FindLongestChain(convertedList);
+            return length; 
         }
         public string GetMoleculeName()
         {

@@ -46,7 +46,33 @@ namespace MindOverMatter.Models.Utilities
             return unsortedChains;
         }
 
+        public int _longestChain(List<Node> nodes)
+        {
+            int length = 0;
+            Node root = GetStartingNodes(nodes).FirstOrDefault();
+            Queue<Node> q = new Queue<Node>();
+            q.Enqueue(root);
 
+            while (q.Count > 0)
+            {
+                length++;
+                var parentChain = new List<Node>();
+                var qSize = q.Count;
+                var prevNode = new Node();
+                for (int i = 0; i < qSize; i++)
+                {
+                    var currentNode = q.Dequeue();
+                    if (currentNode.Neighbors != null)
+                    {                      
+                        foreach (var child in currentNode.Neighbors)
+                        {                            
+                                q.Enqueue(child);                           
+                        }
+                    }
+                }
+            }
+            return length;
+        }
         //If it doesn't work right away I'll fix it
         //I spent 12 hours working towards this and I assume the responsibility off hammering all of my code out
         public Chain FindLongestChain(List<Node> nodesIn)
@@ -79,6 +105,7 @@ namespace MindOverMatter.Models.Utilities
                             {
                                 c.Side = true;
                                 cn.AddBranch(c);
+                                c.AddNode(cn);
                                 if (!cn.nodeChains.Contains(new NodeChain { NodeId = cn.NodeId, ChainId = c.ChainId }))
                                 {
                                     _context.NodeChains.Add(cn.nodeChains.Last());
@@ -129,13 +156,13 @@ namespace MindOverMatter.Models.Utilities
                 }
             }
             bool finished = false;
-            while(finished == false)
+            while (finished == false)
             {
                 //Line
-                if(parentChainSegments[0].CurrentNode != parentChainSegments[1].CurrentNode)
+                if (parentChainSegments[0].CurrentNode != parentChainSegments[1].CurrentNode)
                 {
                     Node SegmentOneNextNode = parentChainSegments[0].FindNextNode();
-                    if(parentChainSegments[1].CurrentNode != SegmentOneNextNode)
+                    if (parentChainSegments[1].CurrentNode != SegmentOneNextNode)
                     {
                         if (SegmentOneNextNode.HasNeighbor(parentChainSegments[1].CurrentNode))
                         {
@@ -145,10 +172,10 @@ namespace MindOverMatter.Models.Utilities
                         SegmentOneNextNode.AddBranch(parentChainSegments[0]);
                         parentChainSegments[0].CurrentNode = SegmentOneNextNode;
                     }
-                    else if(parentChainSegments[1].CurrentNode == SegmentOneNextNode)
+                    else if (parentChainSegments[1].CurrentNode == SegmentOneNextNode)
                     {
                         finished = true;
-                    } 
+                    }
                 }
             }
             parentChainSegments[0].AddChain(parentChainSegments[1]);
@@ -175,7 +202,7 @@ namespace MindOverMatter.Models.Utilities
 
         public bool SideChainsToFind(int found, int chainCount)
         {
-            if(found + 2 == chainCount)
+            if (found + 2 == chainCount)
             {
                 return false;
             }
