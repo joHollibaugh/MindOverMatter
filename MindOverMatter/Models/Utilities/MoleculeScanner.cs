@@ -105,6 +105,7 @@ namespace MindOverMatter.Models.Utilities
                             {
                                 c.Side = true;
                                 cn.AddBranch(c);
+                                c.AddNode(cn);
                                 if (!cn.nodeChains.Contains(new NodeChain { NodeId = cn.NodeId, ChainId = c.ChainId }))
                                 {
                                     _context.NodeChains.Add(cn.nodeChains.Last());
