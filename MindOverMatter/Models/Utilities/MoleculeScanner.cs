@@ -22,12 +22,12 @@ namespace MindOverMatter.Models.Utilities
             List<Node> outerNodes = new List<Node>();
             foreach (Node n in allNodes)
             {
-                n.IsDivergent();
                 n.SetBonds();
-                if (n.Neighbors.Count == 1)
+                n.IsDivergent();
+                if (n.Outer == true)
                 {
                     outerNodes.Add(n);
-                    n.Outer = true;
+                    n.Checked = true;
                 }
             }
             return outerNodes;
@@ -63,18 +63,17 @@ namespace MindOverMatter.Models.Utilities
                 {
                     var currentNode = q.Dequeue();
                     if (currentNode.Neighbors != null)
-                    {                      
+                    {
                         foreach (var child in currentNode.Neighbors)
-                        {                            
-                                q.Enqueue(child);                           
+                        {
+                            q.Enqueue(child);
                         }
                     }
                 }
             }
             return length;
         }
-        //If it doesn't work right away I'll fix it
-        //I spent 12 hours working towards this and I assume the responsibility off hammering all of my code out
+
         public Chain FindLongestChain(List<Node> nodesIn)
         {
             Chain parentChain = new Chain();
@@ -83,74 +82,41 @@ namespace MindOverMatter.Models.Utilities
             List<Chain> sideChains = new List<Chain>();
             int sideChainsFound = 0;
 
-            while (ParentChainsUnfound(parentChainSegments) && SideChainsToFind(sideChainsFound, unsortedChains.Count))
+            
+            while (ParentChainsUnfound(parentChainSegments))
             {
-                //Loop through all unsorted chains and ignore classified chains
                 for (int i = 0; i < unsortedChains.Count; i++)
                 {
-                    //Classification is parent or side chain, included as boolean values of the class
+
                     if (IsUnclassified(unsortedChains[i]))
                     {
                         Chain c = unsortedChains[i];
-                        c.CurrentNode.Checked = true;
-                        //Finding the next node in line for the chain
                         Node cn = c.CurrentNode = c.FindNextNode();
 
-                        if (cn.Divergent)
+                        if (cn.NodeTag != null)
                         {
-                            bool cnChecked = cn.IsLastArrival();
-                            //Checked = true --> Largest Branch converging at this node identified
-                            //Checked = false --> Side Chain identified
-                            if (!cnChecked)
-                            {
-                                c.Side = true;
-                                cn.AddBranch(c);
-                                c.AddNode(cn);
-                                if (!cn.nodeChains.Contains(new NodeChain { NodeId = cn.NodeId, ChainId = c.ChainId }))
-                                {
-                                    _context.NodeChains.Add(cn.nodeChains.Last());
-                                }
-                                sideChainsFound++;
-                            }
-                            else if (cnChecked)
-                            {
-                                //This chain is the largest to arrive at the divergent node, it continues to grow
-                                cn.AddBranch(c);
-                                c.AddNode(cn);
-                                if (!cn.nodeChains.Contains(new NodeChain { NodeId = cn.NodeId, ChainId = c.ChainId }))
-                                {
-                                    _context.NodeChains.Add(cn.nodeChains.Last());
-                                }
-                                //Now it gets skipped and is effectively dead to the scanner
-
-                            }
-                            //Every node will get linked to all chains that are connected to it
-                        }
-                        else if (cn.Linear)
-                        {
-                            c.AddNode(cn);
                             cn.AddBranch(c);
-                            if (cn.nodeChains.Contains(new NodeChain { NodeId = cn.NodeId, ChainId = c.ChainId }) == false)
+                            c.AddNode(cn);
+                            if (!cn.nodeChains.Contains(new NodeChain { NodeId = cn.NodeId, ChainId = c.ChainId }))
                             {
                                 _context.NodeChains.Add(cn.nodeChains.Last());
                             }
-                            cn.Checked = true;
                         }
-                        else if (cn.Outer)
+                        else
                         {
-                            //something went wrong
+                            c.Side = true;
+                            sideChainsFound++;
                         }
                     }
-
-                }
-                if (!SideChainsToFind(sideChainsFound, unsortedChains.Count))
-                {
-                    foreach (Chain c in unsortedChains)
+                    if (!SideChainsToFind(sideChainsFound, unsortedChains.Count))
                     {
-                        if (c.Parent == false && c.Side == false)
+                        foreach (Chain c in unsortedChains)
                         {
-                            c.Parent = true;
-                            parentChainSegments.Add(c);
+                            if (c.Parent == false && c.Side == false)
+                            {
+                                c.Parent = true;
+                                parentChainSegments.Add(c);
+                            }
                         }
                     }
                 }

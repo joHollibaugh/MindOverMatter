@@ -56,9 +56,13 @@ namespace MindOverMatter.Models.Matter
         [NotMapped]
         public bool Checked { get; set; }
         [NotMapped]
+        public bool Next { get; set; }
+        [NotMapped]
         public List<Node> Neighbors { get; set; }
         [NotMapped]
         public List<Chain> Branches { get; set; }
+        [NotMapped]
+        public int Scans { get; set; }
 
 
 
@@ -103,51 +107,29 @@ namespace MindOverMatter.Models.Matter
             return Divergent;
         }
 
-        public bool IsLastArrival()
-        {
-            //Nodes are considered "Checked" by different criteria depending on how many branches they have
-            //Bonds is the total bonds and Branches is the chains that have been attached
-            switch (Bonds)
-            {
-                case 1:
-                    Checked = true;
-                    break;
-                case 2:
-                    if (Branches.Count == 1 || Branches.Count == 2)
-                    {
-                        Checked = true;
-                    }
-                    break;
-                case 3:
-                case 4:
-                    if (Branches.Count + 2 >= Bonds)
-                    {
-                        Checked = true;
-                    }
-                    break;
-            }
-            return Checked;
-        }
-
-        public bool IsCheckedByParent()
+        public bool Scan()
         {
             switch (Bonds)
             {
                 case 1:
-                    Checked = true;
+                    Next = false;
                     break;
                 case 2:
-                    if (Branches.Count == 2)
+                    if (Scans == 0)
                     {
-                        Checked = true;
+                        Next = true;
                     }
+                    else
+                        Next = false;
                     break;
                 case 3:
                 case 4:
-                    if (Branches.Count + 2 >= Bonds)
+                    if (Scans + 2 == Bonds)
                     {
-                        Checked = true;
+                        Next = true;
                     }
+                    else
+                        Next = false;
                     break;
             }
             return Checked;
@@ -170,5 +152,11 @@ namespace MindOverMatter.Models.Matter
         {
             Bonds = Neighbors.Count;
         }
+
+        public override string ToString()
+        {
+            return NodeTag;
+        }
     }
+
 }
