@@ -96,7 +96,7 @@ namespace MindOverMatter.Controllers
         {
           if(IsNullOrEmpty(user.Username) || IsNullOrEmpty(user.Password))
             {
-                return View("Login", new User() { Errors = new List<IdentityError> { new IdentityError() { Code = "Must include username and password" } } });
+                return View("~/Views/Account/LoginPage.cshtml", new User() { Errors = new List<IdentityError> { new IdentityError() { Code = "Must include username and password" } } });
             }
             var signInResult = await _signInManager.PasswordSignInAsync(user.Username, user.Password, true, false);
             if (signInResult.Succeeded)
