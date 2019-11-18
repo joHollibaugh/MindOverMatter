@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,7 +17,6 @@ namespace MindOverMatter.Models.Matter
         {
             MoleculeId = Id;
             Name = name;
-            Chains = chains;
             Nodes = nodes;
         }
         public Molecule(List<Node> nodes)
@@ -27,20 +27,10 @@ namespace MindOverMatter.Models.Matter
         [Required]
         [Key]
         public int MoleculeId { get; set; }
-        public List<Chain> Chains { get; set; }
         public string Name { get; set; }
+        [NotMapped]
         public List<Node> Nodes { get; set; }
 
-        public void SetDivergentNodes()
-        {
-            for(int i = 0; i < Nodes.Count; i++)
-            {
-                if(Nodes[i].Neighbors.Count > 2)
-                {
-                    Nodes[i].Divergent = true;
-                }
-            }
-        }
     }
 
 

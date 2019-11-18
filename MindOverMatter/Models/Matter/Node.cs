@@ -14,30 +14,22 @@ namespace MindOverMatter.Models.Matter
             Neighbors = new List<Node>();
             Branches = new List<Chain>();
             Bonds = 0;
-            nodeChains = new List<NodeChain>();
         }
 
         public Node(int id)
         {
             Neighbors = new List<Node>();
             Branches = new List<Chain>();
-            NodeId = id;
             Bonds = 0;
-            nodeChains = new List<NodeChain>();
         }
 
         public Node(int id, List<Node> neighbors)
         {
             Branches = new List<Chain>();
-            NodeId = id;
             Neighbors = neighbors;
             Bonds = neighbors.Count;
-            nodeChains = new List<NodeChain>();
         }
 
-        [Required]
-        [Key]
-        public int NodeId { get; set; }
         public string NodeTag { get; set; }
         //Properties
         public Atom Atom { get; set; }
@@ -56,22 +48,24 @@ namespace MindOverMatter.Models.Matter
         [NotMapped]
         public bool Checked { get; set; }
         [NotMapped]
+        public bool Next { get; set; }
+        [NotMapped]
         public List<Node> Neighbors { get; set; }
         [NotMapped]
         public List<Chain> Branches { get; set; }
-
-
-
-        //Used by Entity Framework
-        public List<NodeChain> nodeChains { get; set; }
-        public List<NodeNeighbor> nodeNeighbors { get; set; }
+        [NotMapped]
+        public int Scans { get; set; }
 
 
         //Methods
-        public void AddBranch(Chain newBranch)
+        public void AddBranch(Chain branch)
         {
-            Branches.Add(newBranch);
-            nodeChains.Add(new NodeChain { NodeId = NodeId, ChainId = newBranch.ChainId });
+            Chain nonReferenceBranch = new Chain();
+            foreach (Node n in branch.NodeList)
+            {
+                nonReferenceBranch.NodeList.Add(n);
+            }
+            Branches.Add(nonReferenceBranch);
         }
 
         public void AddNeighbor(Node newNeighbor)
@@ -80,50 +74,45 @@ namespace MindOverMatter.Models.Matter
             Bonds = Neighbors.Count();
         }
 
-        public bool IsDivergent()
+        public void SetType()
         {
             if (Bonds > 2)
             {
                 Divergent = true;
             }
-            else if (Bonds <= 2)
+            else if (Bonds == 1)
             {
-                Divergent = false;
-                if (Bonds == 1)
-                {
-                    Outer = true;
-                    Linear = false;
-                }
-                if (Bonds == 2)
-                {
-                    Outer = false;
-                    Linear = true;
-                }
+                Outer = true;
             }
-            return Divergent;
+            else if (Bonds == 2)
+            {
+                Linear = true;
+            }
         }
 
-        public bool IsLastArrival()
+        public bool Scan()
         {
-            //Nodes are considered "Checked" by different criteria depending on how many branches they have
-            //Bonds is the total bonds and Branches is the chains that have been attached
             switch (Bonds)
             {
-                case 1: 
-                    Checked = true;
+                case 1:
+                    Next = false;
                     break;
                 case 2:
-                    if(Branches.Count == 1)
+                    if (Scans == 0)
                     {
-                        Checked = true;
+                        Next = true;
                     }
+                    else
+                        Next = false;
                     break;
                 case 3:
                 case 4:
-                    if(Branches.Count + 2 >= Bonds)
+                    if (Scans + 2 == Bonds)
                     {
-                        Checked = true;
+                        Next = true;
                     }
+                    else
+                        Next = false;
                     break;
             }
             return Checked;
@@ -146,5 +135,11 @@ namespace MindOverMatter.Models.Matter
         {
             Bonds = Neighbors.Count;
         }
+
+        public override string ToString()
+        {
+            return NodeTag;
+        }
     }
+
 }

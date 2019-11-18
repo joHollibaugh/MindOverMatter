@@ -22,12 +22,12 @@ namespace MindOverMatter.Models.Utilities
             List<Node> outerNodes = new List<Node>();
             foreach (Node n in allNodes)
             {
-                n.IsDivergent();
                 n.SetBonds();
-                if (n.Neighbors.Count == 1)
+                n.SetType();
+                if (n.Outer == true)
                 {
                     outerNodes.Add(n);
-                    n.Outer = true;
+                    n.Checked = true;
                 }
             }
             return outerNodes;
@@ -37,11 +37,8 @@ namespace MindOverMatter.Models.Utilities
             List<Chain> unsortedChains = new List<Chain>();
             for (int i = 0; i < startingNodes.Count; i++)
             {
-                unsortedChains.Add(new Chain(startingNodes[i]));
-                _context.Chain.Add(unsortedChains[i]);
+                unsortedChains.Add(new Chain(startingNodes[i], i));
                 unsortedChains[i].AddNode(startingNodes[i]);
-                _context.SaveChanges();
-
             }
             return unsortedChains;
         }
@@ -63,94 +60,64 @@ namespace MindOverMatter.Models.Utilities
                 {
                     var currentNode = q.Dequeue();
                     if (currentNode.Neighbors != null)
-                    {                      
+                    {
                         foreach (var child in currentNode.Neighbors)
-                        {                            
-                                q.Enqueue(child);                           
+                        {
+                            q.Enqueue(child);
                         }
                     }
                 }
             }
             return length;
         }
-        //If it doesn't work right away I'll fix it
-        //I spent 12 hours working towards this and I assume the responsibility off hammering all of my code out
+
+        //Sending back the parent chain object
+        //Every node that has a branch is identified by looping through and checking Branches.count
+        //Every branch that is listed will be a side chain from the parent chain
         public Chain FindLongestChain(List<Node> nodesIn)
         {
             Chain parentChain = new Chain();
             List<Chain> unsortedChains = GetStartingChains(GetStartingNodes(nodesIn));
-            List<Chain> parentChainSegments = new List<Chain>();
+            List<Chain> parentSegment = new List<Chain>();
             List<Chain> sideChains = new List<Chain>();
             int sideChainsFound = 0;
 
-            while (ParentChainsUnfound(parentChainSegments) && SideChainsToFind(sideChainsFound, unsortedChains.Count))
+            
+            while (ParentChainsUnfound(parentSegment))
             {
-                //Loop through all unsorted chains and ignore classified chains
                 for (int i = 0; i < unsortedChains.Count; i++)
                 {
-                    //Classification is parent or side chain, included as boolean values of the class
                     if (IsUnclassified(unsortedChains[i]))
                     {
                         Chain c = unsortedChains[i];
-                        c.CurrentNode.Checked = true;
-                        //Finding the next node in line for the chain
+                        Node previousNode = c.CurrentNode;
                         Node cn = c.CurrentNode = c.FindNextNode();
-
-                        if (cn.Divergent)
+                        if (cn.NodeTag != null)
                         {
-                            bool cnChecked = cn.IsLastArrival();
-                            //Checked = true --> Largest Branch converging at this node identified
-                            //Checked = false --> Side Chain identified
-                            if (!cnChecked)
+                            if (cn.Next)
                             {
-                                c.Side = true;
-                                cn.AddBranch(c);
                                 c.AddNode(cn);
-                                if (!cn.nodeChains.Contains(new NodeChain { NodeId = cn.NodeId, ChainId = c.ChainId }))
-                                {
-                                    _context.NodeChains.Add(cn.nodeChains.Last());
-                                }
-                                sideChainsFound++;
                             }
-                            else if (cnChecked)
-                            {
-                                //This chain is the largest to arrive at the divergent node, it continues to grow
-                                cn.AddBranch(c);
-                                c.AddNode(cn);
-                                if (!cn.nodeChains.Contains(new NodeChain { NodeId = cn.NodeId, ChainId = c.ChainId }))
-                                {
-                                    _context.NodeChains.Add(cn.nodeChains.Last());
-                                }
-                                //Now it gets skipped and is effectively dead to the scanner
-
-                            }
-                            //Every node will get linked to all chains that are connected to it
                         }
-                        else if (cn.Linear)
+                        else
                         {
-                            c.AddNode(cn);
+                            c.CurrentNode = previousNode;
+                            cn = c.FindBranchLink();
+                            c.Side = true;
                             cn.AddBranch(c);
-                            if (cn.nodeChains.Contains(new NodeChain { NodeId = cn.NodeId, ChainId = c.ChainId }) == false)
-                            {
-                                _context.NodeChains.Add(cn.nodeChains.Last());
-                            }
-                            cn.Checked = true;
+                            sideChainsFound++;
                         }
-                        else if (cn.Outer)
-                        {
-                            //something went wrong
-                        }
+                        previousNode.Checked = true;
                     }
-
-                }
-                if (!SideChainsToFind(sideChainsFound, unsortedChains.Count))
-                {
-                    foreach (Chain c in unsortedChains)
+                    if (!SideChainsToFind(sideChainsFound, unsortedChains.Count))
                     {
-                        if (c.Parent == false && c.Side == false)
+                        foreach (Chain c in unsortedChains)
                         {
-                            c.Parent = true;
-                            parentChainSegments.Add(c);
+                            if (c.Parent == false && c.Side == false)
+                            {
+                                c.Parent = true;
+                                parentSegment.Add(c);
+                            }
                         }
                     }
                 }
@@ -158,28 +125,26 @@ namespace MindOverMatter.Models.Utilities
             bool finished = false;
             while (finished == false)
             {
-                //Line
-                if (parentChainSegments[0].CurrentNode != parentChainSegments[1].CurrentNode)
+                if (parentSegment[0].CurrentNode != parentSegment[1].CurrentNode)
                 {
-                    Node SegmentOneNextNode = parentChainSegments[0].FindNextNode();
-                    if (parentChainSegments[1].CurrentNode != SegmentOneNextNode)
+                    Node nextNode = parentSegment[0].FindNextNode();
+                    if (parentSegment[1].CurrentNode != nextNode)
                     {
-                        if (SegmentOneNextNode.HasNeighbor(parentChainSegments[1].CurrentNode))
+                        if (nextNode.HasNeighbor(parentSegment[1].CurrentNode))
                         {
                             finished = true;
                         }
-                        parentChainSegments[0].AddNode(SegmentOneNextNode);
-                        SegmentOneNextNode.AddBranch(parentChainSegments[0]);
-                        parentChainSegments[0].CurrentNode = SegmentOneNextNode;
+                        parentSegment[0].AddNode(nextNode);
+                        parentSegment[0].CurrentNode = nextNode;
                     }
-                    else if (parentChainSegments[1].CurrentNode == SegmentOneNextNode)
+                    else if (parentSegment[1].CurrentNode == nextNode)
                     {
                         finished = true;
                     }
                 }
             }
-            parentChainSegments[0].AddChain(parentChainSegments[1]);
-            return parentChainSegments[0];
+            parentSegment[0].AddChain(parentSegment[1]);
+            return parentSegment[0];
         }
 
         public bool ParentChainsUnfound(List<Chain> parentSegments)
@@ -190,7 +155,6 @@ namespace MindOverMatter.Models.Utilities
             }
             return true;
         }
-
         public bool IsUnclassified(Chain c)
         {
             if (c.Parent == false && c.Side == false)
@@ -199,7 +163,6 @@ namespace MindOverMatter.Models.Utilities
             }
             return false;
         }
-
         public bool SideChainsToFind(int found, int chainCount)
         {
             if (found + 2 == chainCount)
@@ -210,5 +173,3 @@ namespace MindOverMatter.Models.Utilities
         }
     }
 }
-
-

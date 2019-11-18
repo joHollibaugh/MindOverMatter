@@ -23,7 +23,7 @@ namespace MindOverMatter.Controllers
         }
 
         [HttpPost]
-        public int getMolecule(string input)
+        public ActionResult getMolecule(string input)
         {
             List<ConvertableMol> Clist = JsonConvert.DeserializeObject<List<ConvertableMol>>(input);
             var map = new Dictionary<string, String[]>();
@@ -47,9 +47,9 @@ namespace MindOverMatter.Controllers
                 n.Neighbors = _neighbors;
                 convertedList.Add(n);
             }
-            int length = scanner._longestChain(convertedList);
-            //Chain parentChain = scanner.FindLongestChain(convertedList);
-            return length; 
+            //int length = scanner._longestChain(convertedList);
+            Chain parentChain = scanner.FindLongestChain(convertedList);
+            return View(); 
         }
         public string GetMoleculeName()
         {
@@ -61,21 +61,17 @@ namespace MindOverMatter.Controllers
             Node c4 = new Node() { NodeTag = "C4" };
             Node c5 = new Node() { NodeTag = "C5" };
             Node c6 = new Node() { NodeTag = "C6" };
-            Node c7 = new Node() { NodeTag = "C7" };
-            Node c8 = new Node() { NodeTag = "C8" };
-            c0.Neighbors = new List<Node>() { c1, c7, c8 };
+            c0.Neighbors = new List<Node>() { c1 };
             c1.Neighbors = new List<Node>() { c0, c2, c4 };
             c2.Neighbors = new List<Node>() { c1, c3, c5 };
             c3.Neighbors = new List<Node>() { c2 };
             c4.Neighbors = new List<Node>() { c1 };
             c5.Neighbors = new List<Node>() { c2, c6 };
             c6.Neighbors = new List<Node>() { c5 };
-            c7.Neighbors = new List<Node>() { c0 };
-            c8.Neighbors = new List<Node>() { c0 };
 
-            List<Node> fakeNodes = new List<Node>() { c0, c1, c2, c3, c4, c5, c6, c7, c8 };
+            List<Node> fakeNodes = new List<Node>() { c0, c1, c2, c3, c4, c5, c6 };
 
-            Chain parentChain = scanner.FindLongestChain(fakeNodes);
+            Chain parentNode = scanner.FindLongestChain(scanner.GetStartingNodes(fakeNodes));
             return "In Progress...";
         }
     }

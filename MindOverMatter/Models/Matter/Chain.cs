@@ -30,9 +30,6 @@ namespace MindOverMatter.Models.Matter
         public Boolean Side { get; set; }
         public Node CurrentNode { get; set; }
 
-        //Used by Entity Framework
-        public NodeChain NodeChain { get; set; }
-
         public void AddNode(Node newNode)
         {
             NodeList.Add(newNode);
@@ -48,24 +45,35 @@ namespace MindOverMatter.Models.Matter
 
         public Node FindNextNode()
         {
-            //Make sure all of the branches on divergent nodes have been exhausted prior to finding the next node
             Node nextNode = new Node();
             foreach (Node n in CurrentNode.Neighbors)
             {
-                //If this neighbor hasn't been checked and we have established a linear path (not divergent)
-                //This must be the next node
-                if (!n.IsDivergent() && !n.Checked)
+                n.Scan();
+                if (!n.Divergent && n.Next)
                 {
                     nextNode = n;
                 }
-                else if(n.IsDivergent())
+                else if(n.Divergent && n.Next)
+                {
+                    nextNode = n;
+                }
+                n.Scans++;
+            }
+            return nextNode;
+        }
+
+        public Node FindBranchLink()
+        {
+            Node nextNode = new Node();
+            foreach (Node n in CurrentNode.Neighbors)
+            {
+                if (n.Divergent && !n.Checked)
                 {
                     nextNode = n;
                 }
             }
             return nextNode;
         }
-
     }
 }
 
