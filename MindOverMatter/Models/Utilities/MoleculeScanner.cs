@@ -43,33 +43,69 @@ namespace MindOverMatter.Models.Utilities
             return unsortedChains;
         }
 
-        public int _longestChain(List<Node> nodes)
+        public Chain numberParentSegment(Chain parentChain)
         {
-            int length = 0;
-            Node root = GetStartingNodes(nodes).FirstOrDefault();
-            Queue<Node> q = new Queue<Node>();
-            q.Enqueue(root);
-
-            while (q.Count > 0)
-            {
-                length++;
-                var parentChain = new List<Node>();
-                var qSize = q.Count;
-                var prevNode = new Node();
-                for (int i = 0; i < qSize; i++)
+            List<Node> endNodes = GetStartingNodes(parentChain.NodeList);                
+            Queue<Node> q = new Queue<Node>();                                           
+            Queue<Node> _q = new Queue<Node>();                                          
+            int count = 0;                                                               
+            int _count = 0;
+            Node previousNode = new Node();
+            q.Enqueue(endNodes[0]);
+            _q.Enqueue(endNodes[1]);
+            while(q.Count > 0)                                                           
+            {                                                                            
+                count++;                                                                 
+                var currentNode = q.Dequeue();
+                if (count == 1)
                 {
-                    var currentNode = q.Dequeue();
-                    if (currentNode.Neighbors != null)
-                    {
-                        foreach (var child in currentNode.Neighbors)
-                        {
-                            q.Enqueue(child);
-                        }
-                    }
+                    previousNode = currentNode;
+
+                }
+                if (currentNode.Neighbors.Count >= 3)                                    
+                {                                                                        
+                    q.Clear();                                                           
+                }
+                else
+                {
+                    q.Enqueue(currentNode.Neighbors.Find(_n => _n != previousNode));
+                    previousNode = q.FirstOrDefault();
+                   
+                }
+            }                                                                            
+            while (_q.Count > 0)                                                         
+            {                                                                            
+                _count++;                                                                
+                var currentNode = _q.Dequeue();
+                if (_count == 1)
+                {
+                    previousNode = currentNode;
+
+                }
+                if (currentNode.Neighbors.Count >= 3)                                    
+                {                                                                        
+                    _q.Clear();                                                          
+                }
+                else
+                {
+                    _q.Enqueue(currentNode.Neighbors.Find(_n => _n != previousNode));
+                        previousNode = _q.FirstOrDefault();
+                    
                 }
             }
-            return length;
-        }
+
+
+            if (count < _count)
+            {
+                parentChain.NodeList.Reverse();
+            }
+            foreach (var n in parentChain.NodeList)
+            {
+                n.Position = parentChain.NodeList.FindIndex(a => a == n);
+            }
+
+            return parentChain;                                                          
+        }                                                                                
 
         //Sending back the parent chain object
         //Every node that has a branch is identified by looping through and checking Branches.count
@@ -144,8 +180,10 @@ namespace MindOverMatter.Models.Utilities
                 }
             }
             parentSegment[0].AddChain(parentSegment[1]);
+            numberParentSegment(parentSegment[0]);
             return parentSegment[0];
         }
+
 
         public bool ParentChainsUnfound(List<Chain> parentSegments)
         {

@@ -25,10 +25,15 @@ namespace MindOverMatter.Models.Matter
         }
 
         public int ChainId { get; set; }
+
         public List<Node> NodeList { get; set; }
+
         public Boolean Parent { get; set; }
+
         public Boolean Side { get; set; }
+
         public Node CurrentNode { get; set; }
+
 
         public void AddNode(Node newNode)
         {
