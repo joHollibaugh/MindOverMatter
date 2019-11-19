@@ -55,6 +55,8 @@ namespace MindOverMatter.Models.Matter
         public List<Chain> Branches { get; set; }
         [NotMapped]
         public int Scans { get; set; }
+        [NotMapped]
+        public int Position { get; set; }
 
 
         //Methods

@@ -98,7 +98,7 @@ function onMouseDown(event) {
                 return obj.Loc.x === point.x && obj.Loc.y === point.y;
             });
 
-            var C = { b: [CRef.ID], ID: "C" + event.count, P: null, Loc: event.downPoint }
+            var C = { b: [CRef.ID], ID: "C" + Molecule.length, P: null, Loc: event.downPoint }
             Molecule.push(C);
             CRef.b.push(C.ID);
             circle = new Path.Circle(event.downPoint, 7);
