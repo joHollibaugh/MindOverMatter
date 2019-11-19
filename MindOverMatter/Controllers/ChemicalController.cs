@@ -8,6 +8,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft;
 using Newtonsoft.Json;
+using MindOverMatter.Models.ViewModels;
+using Microsoft.AspNet.Identity;
 
 namespace MindOverMatter.Controllers
 {
@@ -49,7 +51,7 @@ namespace MindOverMatter.Controllers
             }
             //int length = scanner._longestChain(convertedList);
             Chain parentChain = scanner.FindLongestChain(convertedList);
-            return View(); 
+            return PartialView("~/Views/Home/RatingModal.cshtml", new RatingModalModel() { MoleculeId = "10", MoleculeName="Ethane", UserIdEncrypt=User.Identity.GetUserId() }); 
         }
         public string GetMoleculeName()
         {

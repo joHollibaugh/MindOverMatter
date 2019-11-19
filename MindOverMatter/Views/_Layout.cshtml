@@ -37,17 +37,17 @@
         <div id="navBar">
             @*Do not put  a semicolon after these. They will be rendered*@
 
-            @Html.ActionLink("Home", "Index", "Home")
             @if (!User.Identity.IsAuthenticated)
             {
-                @Html.ActionLink("Login/Register", "LoginPage", "Account")
+                <a href='@Url.Action("LoginPage", "Account")'>Login&nbsp;/&nbsp;Register </a>
             }
             else
             {
-                @Html.ActionLink("Signout","Logout","Account")
+                @Html.ActionLink("Home", "Index", "Home")
+                @Html.ActionLink("Signout", "Logout", "Account")
             }
 
-        </div>
+</div>
         <div>
             @RenderBody()
         </div>

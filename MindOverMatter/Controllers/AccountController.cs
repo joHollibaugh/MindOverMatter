@@ -72,6 +72,7 @@ namespace MindOverMatter.Controllers
                     result = await _userManager.CreateAsync(newUser, user.Password);
                     if (result.Succeeded)
                     {
+                        await _signInManager.SignInAsync(newUser,true);
                         return RedirectToAction("Index", "Home");
                     }
                     else
@@ -105,9 +106,8 @@ namespace MindOverMatter.Controllers
             }
             else
             {
-                return View("Login", new User() { Errors = new List<IdentityError> { new IdentityError() { Code = "Invalid Username or password" } } });
+                return View("~/Views/Account/LoginPage.cshtml", new User() { Errors = new List<IdentityError> { new IdentityError() { Code = "Invalid Username or password" } } });
             }
-
         }
     }
 }

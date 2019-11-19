@@ -34,8 +34,8 @@ $('input[id$="btnGetName"]').on('click', function () {
 function getName(Mol) {
     Mol.Neighbors = Mol.b;
     Mol.NodeID = Mol.ID;
-
-    JSONPost("/Chemical/getMolecule", { input: JSON.stringify(Mol) } , successCallback);
+    debugger;
+    JSONModalPost("/Chemical/getMolecule", { input: JSON.stringify(Mol) } , successCallback);
     function successCallback(response) {
         var data = response;
         var name;
@@ -64,8 +64,13 @@ function getName(Mol) {
 
         }
         $('label[id$="theName"]').empty().append(name);
-
+        setTimeout(showRating, 500);
     }
+}
+
+function showRating(data) {
+    debugger;
+    $('Content').html(data);
 }
 
 function onMouseDown(event) {
