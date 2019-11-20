@@ -34,8 +34,8 @@ $('input[id$="btnGetName"]').on('click', function () {
 function getName(Mol) {
     Mol.Neighbors = Mol.b;
     Mol.NodeID = Mol.ID;
-
-    JSONPost("/Chemical/getMolecule", { input: JSON.stringify(Mol) } , successCallback);
+    debugger;
+    JSONModalPost("/Chemical/getMolecule", { input: JSON.stringify(Mol) } , successCallback);
     function successCallback(response) {
         var data = response;
         var name;
@@ -64,8 +64,13 @@ function getName(Mol) {
 
         }
         $('label[id$="theName"]').empty().append(name);
-
+        setTimeout(showRating, 500);
     }
+}
+
+function showRating(data) {
+    debugger;
+    $('Content').html(data);
 }
 
 function onMouseDown(event) {
@@ -93,7 +98,7 @@ function onMouseDown(event) {
                 return obj.Loc.x === point.x && obj.Loc.y === point.y;
             });
 
-            var C = { b: [CRef.ID], ID: "C" + event.count, P: null, Loc: event.downPoint }
+            var C = { b: [CRef.ID], ID: "C" + Molecule.length, P: null, Loc: event.downPoint }
             Molecule.push(C);
             CRef.b.push(C.ID);
             circle = new Path.Circle(event.downPoint, 7);
