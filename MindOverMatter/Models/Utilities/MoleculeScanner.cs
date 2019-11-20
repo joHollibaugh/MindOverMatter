@@ -62,7 +62,7 @@ namespace MindOverMatter.Models.Utilities
                     previousNode = currentNode;
 
                 }
-                if (currentNode.Neighbors.Count >= 3)                                    
+                if (currentNode.Neighbors.Count >= 3 || endNodes.IndexOf(currentNode) != -1)                                    
                 {                                                                        
                     q.Clear();                                                           
                 }
@@ -85,7 +85,7 @@ namespace MindOverMatter.Models.Utilities
                     previousNode = currentNode;
 
                 }
-                if (currentNode.Neighbors.Count >= 3)                                    
+                if (currentNode.Neighbors.Count >= 3 || endNodes.IndexOf(currentNode) != -1)                                    
                 {                                                                        
                     _q.Clear();                                                          
                 }
