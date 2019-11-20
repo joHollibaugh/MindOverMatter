@@ -68,11 +68,14 @@ namespace MindOverMatter.Models.Utilities
                 }
                 else
                 {
-                    q.Enqueue(currentNode.Neighbors.Find(_n => _n != previousNode));
-                    previousNode = q.FirstOrDefault();
-                   
+                    q.Enqueue(currentNode.Neighbors.Find(_n => _n != previousNode && _n != currentNode));
                 }
-            }                                                                            
+                if (count > 1)
+                {
+                    previousNode = currentNode;
+                }
+
+            }
             while (_q.Count > 0)                                                         
             {                                                                            
                 _count++;                                                                
@@ -88,20 +91,22 @@ namespace MindOverMatter.Models.Utilities
                 }
                 else
                 {
-                    _q.Enqueue(currentNode.Neighbors.Find(_n => _n != previousNode));
-                        previousNode = _q.FirstOrDefault();
-                    
+                    _q.Enqueue(currentNode.Neighbors.Find(_n => _n != previousNode && _n != currentNode));                    
+                }
+                if (_count > 1)
+                {
+                    previousNode = currentNode;
                 }
             }
 
 
-            if (count < _count)
+            if (count > _count)
             {
                 parentChain.NodeList.Reverse();
             }
             foreach (var n in parentChain.NodeList)
             {
-                n.Position = parentChain.NodeList.FindIndex(a => a == n);
+                n.Position = parentChain.NodeList.FindIndex(a => a == n) + 1;
             }
 
             return parentChain;                                                          
