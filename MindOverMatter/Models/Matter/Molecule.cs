@@ -30,9 +30,6 @@ namespace MindOverMatter.Models.Matter
         public string Name { get; set; }
         [NotMapped]
         public List<Node> Nodes { get; set; }
-
     }
-
-
 
 }
