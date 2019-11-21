@@ -4,7 +4,9 @@
 <div class="ModalWrapper">
     <div class="ModalHeader">Tell us what you think!</div>
     <div class="body">
-        <input id="moleculeName" type="hidden" value="@Model.MoleculeName" />
+        <div id="NameBox">
+            <label id="theName">@Model.MoleculeName</label>
+        </div>
         <form id="RatingForm" method="post" action="">
             <input class="star {split:4}" type="radio" value="1" name="rating" />
             <input class="star {split:4}" type="radio" value="2" name="rating" />
