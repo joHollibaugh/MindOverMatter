@@ -14,7 +14,9 @@ namespace MindOverMatter.Models.Matter
         }
         [Key]
         public int PrefixId { get; set; }
+        [Required]
         public String Name { get; set; }
+        [Required]
         public int ChainLength { get; set; }
     }
 }
