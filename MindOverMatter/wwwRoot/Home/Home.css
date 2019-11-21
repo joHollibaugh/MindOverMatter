@@ -126,3 +126,7 @@ input[type="button"],input[type="submit"] {
     color: green;
     font-weight: 800;
 }
+
+.modal {
+    background-color: antiquewhite;
+}
