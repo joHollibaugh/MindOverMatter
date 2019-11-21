@@ -63,13 +63,21 @@ function getName(Mol) {
 
         }
         debugger;
-        showRating();
+        showRating(data);
     }
 }
 
 function showRating(data) {
     debugger;
-    $('Content').html(data);
+    $('#modalContent').html(data);
+    $('#modal-container').modal('show');
+    bindEvents();
+}
+
+function bindEvents() {
+    $('#close').on('click', function () {
+        $('#modal-container').modal('hide');
+    })
 }
 
 function onMouseDown(event) {

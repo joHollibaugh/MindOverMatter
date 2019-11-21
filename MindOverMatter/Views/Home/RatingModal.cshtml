@@ -1,18 +1,18 @@
 ﻿@using MindOverMatter.Models.ViewModels;
 @model RatingModalModel
 
-<div class="ModalWrapper">
-    <div class="ModalHeader">Tell us what you think!</div>
-    <div class="body">
-        <div id="NameBox">
-            <label id="theName">@Model.MoleculeName</label>
+        <div class="modal-body">
+            <div id="NameBox">
+                <label id="theName">@Model.MoleculeName</label>
+            </div>
+            <form id="RatingForm" method="post" action="">
+                <input class="star {split:4}" type="radio" value="1" name="rating" />
+                <input class="star {split:4}" type="radio" value="2" name="rating" />
+                <input class="star {split:4}" type="radio" value="3" name="rating" />
+                <input class="star {split:4}" type="radio" value="4" name="rating" />
+                <input class="star {split:4}" type="radio" value="5" name="rating" />
+            </form>
         </div>
-        <form id="RatingForm" method="post" action="">
-            <input class="star {split:4}" type="radio" value="1" name="rating" />
-            <input class="star {split:4}" type="radio" value="2" name="rating" />
-            <input class="star {split:4}" type="radio" value="3" name="rating" />
-            <input class="star {split:4}" type="radio" value="4" name="rating" />
-            <input class="star {split:4}" type="radio" value="5" name="rating" />
-        </form>
-    </div>
-</div>
+        <div class="modal-footer">
+            <button id="close" type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+        </div>
