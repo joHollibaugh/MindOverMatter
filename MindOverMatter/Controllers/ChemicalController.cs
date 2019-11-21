@@ -50,7 +50,8 @@ namespace MindOverMatter.Controllers
                 convertedList.Add(n);
             }
             //int length = scanner._longestChain(convertedList);
-            Chain parentChain = scanner.FindLongestChain(convertedList);
+            Molecule mol = scanner.FindLongestChain(convertedList);
+         
             return PartialView("~/Views/Home/RatingModal.cshtml", new RatingModalModel() { MoleculeId = "10", MoleculeName="Ethane", UserIdEncrypt=User.Identity.GetUserId() }); 
         }
         public string GetMoleculeName()
@@ -73,7 +74,7 @@ namespace MindOverMatter.Controllers
 
             List<Node> fakeNodes = new List<Node>() { c0, c1, c2, c3, c4, c5, c6 };
 
-            Chain parentNode = scanner.FindLongestChain(scanner.GetStartingNodes(fakeNodes));
+            Molecule mol = scanner.FindLongestChain(scanner.GetStartingNodes(fakeNodes));
             return "In Progress...";
         }
     }

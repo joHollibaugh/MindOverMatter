@@ -115,7 +115,7 @@ namespace MindOverMatter.Models.Utilities
         //Sending back the parent chain object
         //Every node that has a branch is identified by looping through and checking Branches.count
         //Every branch that is listed will be a side chain from the parent chain
-        public Chain FindLongestChain(List<Node> nodesIn)
+        public Molecule FindLongestChain(List<Node> nodesIn)
         {
             Chain parentChain = new Chain();
             List<Chain> unsortedChains = GetStartingChains(GetStartingNodes(nodesIn));
@@ -186,9 +186,35 @@ namespace MindOverMatter.Models.Utilities
             }
             parentSegment[0].AddChain(parentSegment[1]);
             numberParentSegment(parentSegment[0]);
-            return parentSegment[0];
-        }
+            Molecule mol = new Molecule();
 
+
+            mol.ParentChain = parentSegment[0];
+            foreach (Chain c in sideChains)
+            {
+                if (c.Side)
+                {
+                    mol.SideChains.Add(c);
+                }
+            }
+
+            //int counter = 0;
+            //foreach(Node n in mol.ParentChain.NodeList)
+            //{
+            //    if(n.Divergent)
+            //    {
+            //        counter++;
+            //        mol.Name += n.Position;
+            //        if (sideChainsFound > 1 && counter < sideChainsFound)
+            //        {
+            //            mol.Name += ",";
+            //        }
+            //    }
+            //}
+            //mol.Name += "-";
+
+            return mol;
+        }
 
         public bool ParentChainsUnfound(List<Chain> parentSegments)
         {
