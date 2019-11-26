@@ -198,20 +198,20 @@ namespace MindOverMatter.Models.Utilities
                 }
             }
 
-            //int counter = 0;
-            //foreach(Node n in mol.ParentChain.NodeList)
-            //{
-            //    if(n.Divergent)
-            //    {
-            //        counter++;
-            //        mol.Name += n.Position;
-            //        if (sideChainsFound > 1 && counter < sideChainsFound)
-            //        {
-            //            mol.Name += ",";
-            //        }
-            //    }
-            //}
-            //mol.Name += "-";
+            int counter = 0;
+            foreach (Node n in mol.ParentChain.NodeList)
+            {
+                if (n.Divergent)
+                {
+                    counter++;
+                    mol.Name += n.Position;
+                    if (sideChainsFound > 1 && counter < sideChainsFound)
+                    {
+                        mol.Name += ",";
+                    }
+                }
+            }
+            mol.Name += "-";
 
             return mol;
         }

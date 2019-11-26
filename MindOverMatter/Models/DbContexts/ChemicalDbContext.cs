@@ -59,7 +59,8 @@ namespace MindOverMatter.Models.DbContexts
 
         public Atom GetAtomByName(string name)
         {
-            return (Atom)Atoms.Where(x => x.Name == name);
+            var query = Atoms.Where(x => x.Name == name);
+            return query.First<Atom>();
         }
     }
 }
