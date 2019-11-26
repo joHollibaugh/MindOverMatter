@@ -38,22 +38,30 @@ namespace MindOverMatter.Models.Matter
             {
                 if (n.Divergent)
                 {
-                    counter++;
                     map.Add(n.Position, _context.GetPrefixByLength(n.Branches[0].NodeList.Count()).Name);
-                    if (this.SideChains.Count > 1 && counter < this.SideChains.Count)
-                    {
-                        this.Name += ",";
-                    }
                 }
             }
             var identicalPairs = map.ToLookup(x => x.Value, x => x.Key).Where(x => x.Count() > 1);
             foreach (var item in identicalPairs)
             {
                 var keys = item.Aggregate("", (s, v) => s + ", " + v);
-                
+                this.Name += keys + "-Di" + item.Key + "yl";
+                this.Name.Substring(1);
+            }
+            foreach(var item in identicalPairs)
+            {
+                map.Remove(item.ElementAt(0));
+                map.Remove(item.ElementAt(1));
+
+            }
+            foreach (var item in map)
+            {
+                Name += item.Key + "-" + item.Value + "yl";
             }
 
-            this.Name += "-";
+
+            this.Name += _context.GetPrefixByLength(this.ParentChain.NodeList.Count).Name + "ane";
+           
             return this.Name;
         }
     }

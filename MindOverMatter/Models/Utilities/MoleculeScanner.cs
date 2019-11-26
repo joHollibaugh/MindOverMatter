@@ -190,7 +190,8 @@ namespace MindOverMatter.Models.Utilities
 
 
             mol.ParentChain = parentSegment[0];
-            foreach (Chain c in sideChains)
+            mol.SideChains = new List<Chain>();
+            foreach (Chain c in unsortedChains)
             {
                 if (c.Side)
                 {
