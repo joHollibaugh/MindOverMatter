@@ -50,9 +50,30 @@ namespace MindOverMatter.Controllers
                 convertedList.Add(n);
             }
             //int length = scanner._longestChain(convertedList);
-            Molecule mol = scanner.FindLongestChain(convertedList);
-         
-            return PartialView("~/Views/Home/RatingModal.cshtml", new RatingModalModel() { MoleculeId = "10", MoleculeName="Ethane", UserIdEncrypt=User.Identity.GetUserId() }); 
+            if (convertedList.Count <= 3)
+            {
+                String Name = "";
+                switch (convertedList.Count)
+                {
+                    case 1:
+                        Name = "Methane";
+                        break;
+                    case 2:
+                        Name = "Ethane";
+                        break;
+                    case 3:
+                        Name = "Propane";
+                        break;
+                }
+                return PartialView("~/Views/Home/RatingModal.cshtml", new RatingModalModel() { MoleculeId = "10", MoleculeName = Name, UserIdEncrypt = User.Identity.GetUserId() });
+            }
+            else
+            {
+                Molecule mol = scanner.FindLongestChain(convertedList);
+                return PartialView("~/Views/Home/RatingModal.cshtml", new RatingModalModel() { MoleculeId = "10", MoleculeName = mol.getName(_context), UserIdEncrypt = User.Identity.GetUserId() });
+
+
+            }
         }
         public string GetMoleculeName()
         {

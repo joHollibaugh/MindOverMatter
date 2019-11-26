@@ -53,12 +53,14 @@ namespace MindOverMatter.Models.DbContexts
 
         public Prefix GetPrefixByLength(int chainLength)
         {
-            return (Prefix)Prefixes.Where(x => x.ChainLength == chainLength);
+            var query = Prefixes.Where(x => x.ChainLength == chainLength);
+            return query.First<Prefix>();
         }
 
         public Atom GetAtomByName(string name)
         {
-            return (Atom)Atoms.Where(x => x.Name == name);
+            var query = Atoms.Where(x => x.Name == name);
+            return query.First<Atom>();
         }
     }
 }
