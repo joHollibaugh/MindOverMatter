@@ -62,7 +62,7 @@ namespace MindOverMatter.Models.Utilities
                     previousNode = currentNode;
 
                 }
-                if (currentNode.Neighbors.Count >= 3 || endNodes.IndexOf(currentNode) != -1)                                    
+                if (currentNode.Neighbors.Count >= 3 || endNodes.IndexOf(currentNode) != -1 && count > 1)                                    
                 {                                                                        
                     q.Clear();                                                           
                 }
@@ -85,7 +85,7 @@ namespace MindOverMatter.Models.Utilities
                     previousNode = currentNode;
 
                 }
-                if (currentNode.Neighbors.Count >= 3 || endNodes.IndexOf(currentNode) != -1)                                    
+                if (currentNode.Neighbors.Count >= 3 || endNodes.IndexOf(currentNode) != -1 && _count > 1 )                                    
                 {                                                                        
                     _q.Clear();                                                          
                 }
@@ -197,21 +197,6 @@ namespace MindOverMatter.Models.Utilities
                     mol.SideChains.Add(c);
                 }
             }
-
-            int counter = 0;
-            foreach (Node n in mol.ParentChain.NodeList)
-            {
-                if (n.Divergent)
-                {
-                    counter++;
-                    mol.Name += n.Position;
-                    if (sideChainsFound > 1 && counter < sideChainsFound)
-                    {
-                        mol.Name += ",";
-                    }
-                }
-            }
-            mol.Name += "-";
 
             return mol;
         }
