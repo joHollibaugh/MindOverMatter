@@ -47,7 +47,11 @@ namespace MindOverMatter.Models.Matter
                 }
             }
             var identicalPairs = map.ToLookup(x => x.Value, x => x.Key).Where(x => x.Count() > 1);
-
+            foreach (var item in identicalPairs)
+            {
+                var keys = item.Aggregate("", (s, v) => s + ", " + v);
+                
+            }
 
             this.Name += "-";
             return this.Name;
