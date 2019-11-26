@@ -62,13 +62,11 @@ function getName(Mol) {
                 break;
 
         }
-        debugger;
         showRating(data);
     }
 }
 
 function showRating(data) {
-    debugger;
     $('#modalContent').html(data);
     $('#modal-container').modal('show');
     bindEvents();

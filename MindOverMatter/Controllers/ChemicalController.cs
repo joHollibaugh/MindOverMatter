@@ -77,5 +77,11 @@ namespace MindOverMatter.Controllers
             Molecule mol = scanner.FindLongestChain(scanner.GetStartingNodes(fakeNodes));
             return "In Progress...";
         }
+
+        public ActionResult RateName(string rating)
+        {
+
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
