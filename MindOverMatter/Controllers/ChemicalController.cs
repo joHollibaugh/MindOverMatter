@@ -71,8 +71,6 @@ namespace MindOverMatter.Controllers
             {
                 Molecule mol = scanner.FindLongestChain(convertedList);
                 return PartialView("~/Views/Home/RatingModal.cshtml", new RatingModalModel() { MoleculeId = "10", MoleculeName = mol.getName(_context), UserIdEncrypt = User.Identity.GetUserId() });
-
-
             }
         }
         public string GetMoleculeName()
