@@ -29,7 +29,7 @@ namespace MindOverMatter.Models.DbContexts
             modelBuilder.Entity<Prefix>().HasKey(x => x.PrefixId);
             modelBuilder.Entity<Prefix>().HasData(
                 new Prefix() { PrefixId = 1, Name = "Meth", ChainLength = 1, },
-                new Prefix() { PrefixId = 2, Name = "Ethane", ChainLength = 2, },
+                new Prefix() { PrefixId = 2, Name = "Eth", ChainLength = 2, },
                 new Prefix() { PrefixId = 3, Name = "Prop", ChainLength = 3, },
                 new Prefix() { PrefixId = 4, Name = "But", ChainLength = 4, },
                 new Prefix() { PrefixId = 5, Name = "Pent", ChainLength = 5, },

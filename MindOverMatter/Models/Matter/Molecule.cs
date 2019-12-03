@@ -33,7 +33,6 @@ namespace MindOverMatter.Models.Matter
         public string getName(ChemicalDbContext _context)
         {
             Dictionary<int, string> map = new Dictionary<int, string>();
-            int counter = 0;
             foreach (Node n in this.ParentChain.NodeList)
             {
                 if (n.Divergent)
@@ -56,12 +55,18 @@ namespace MindOverMatter.Models.Matter
             }
             foreach (var item in map)
             {
-                Name += item.Key + "-" + item.Value + "yl";
+                Name += item.Key + "-" + item.Value + "yl" + "-";
+            }
+            if (Equals(this.Name[this.Name.Length-1], "-"))
+            {
+                this.Name = this.Name.Substring(0, this.Name.Length - 2);
             }
 
-
             this.Name += _context.GetPrefixByLength(this.ParentChain.NodeList.Count).Name + "ane";
-           
+           if (Equals(this.Name[0] , ","))
+            {
+                this.Name = this.Name.Substring(1);
+            }
             return this.Name;
         }
     }
