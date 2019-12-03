@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MindOverMatter.Models.DbContexts;
 
 namespace MindOverMatter.Migrations
 {
     [DbContext(typeof(ChemicalDbContext))]
-    partial class ChemicalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191203004005_Change_Field_to_VarChar")]
+    partial class Change_Field_to_VarChar
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

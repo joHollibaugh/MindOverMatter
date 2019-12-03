@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MindOverMatter.Models.DbContexts;
 
 namespace MindOverMatter.Migrations
 {
     [DbContext(typeof(ChemicalDbContext))]
-    partial class ChemicalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191202234819_add-field-JsonObject")]
+    partial class addfieldJsonObject
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,23 +87,6 @@ namespace MindOverMatter.Migrations
                         new { PrefixId = 19, ChainLength = 19, Name = "Nonadec" },
                         new { PrefixId = 20, ChainLength = 20, Name = "Icos" }
                     );
-                });
-
-            modelBuilder.Entity("MindOverMatter.Models.User.Rating", b =>
-                {
-                    b.Property<int>("RatingId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("MoleculeId");
-
-                    b.Property<int>("Score");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("RatingId");
-
-                    b.ToTable("Ratings");
                 });
 #pragma warning restore 612, 618
         }

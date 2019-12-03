@@ -10,5 +10,6 @@ namespace MindOverMatter.Models.ViewModels
         public string MoleculeName { get; set; }
         public string MoleculeId { get; set; }
         public string UserIdEncrypt { get; set; }
+        public string MoleculeJson { get; set; }
     }
 }

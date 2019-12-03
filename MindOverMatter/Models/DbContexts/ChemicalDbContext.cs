@@ -1,7 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using MindOverMatter.Models.Matter;
+using MindOverMatter.Models.User;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,16 +19,13 @@ namespace MindOverMatter.Models.DbContexts
         public DbSet<Atom> Atoms { get; set; }
         public DbSet<Molecule> Molecules { get; set; }
         public DbSet<Prefix> Prefixes { get; set; }
+        public DbSet<Rating> Ratings { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Atom>().HasKey(x => x.AtomId);
-            modelBuilder.Entity<Atom>().HasData(
-                    new Atom { AtomId = 1, Name = "Carbon", BondPotential = 4 },
-                    new Atom { AtomId = 2, Name = "Oxygen", BondPotential = 2 },
-                    new Atom { AtomId = 3, Name = "Nitrogen", BondPotential = 3 },
-                    new Atom { AtomId = 4, Name = "Fluorine", BondPotential = 1 },
-                    new Atom { AtomId = 5, Name = "Chlorine", BondPotential = 1 }
-                );
+            
             modelBuilder.Entity<Prefix>().HasKey(x => x.PrefixId);
             modelBuilder.Entity<Prefix>().HasData(
                 new Prefix() { PrefixId = 1, Name = "Meth", ChainLength = 1, },
@@ -51,6 +51,15 @@ namespace MindOverMatter.Models.DbContexts
                 );
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+             .SetBasePath(Directory.GetCurrentDirectory())
+             .AddJsonFile("appsettings.json")
+             .Build();
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            optionsBuilder.UseSqlServer(connectionString);
+        }
         public Prefix GetPrefixByLength(int chainLength)
         {
             var query = Prefixes.Where(x => x.ChainLength == chainLength);

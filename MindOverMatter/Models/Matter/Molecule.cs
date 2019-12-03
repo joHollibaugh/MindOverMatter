@@ -23,6 +23,8 @@ namespace MindOverMatter.Models.Matter
         [Key]
         public int MoleculeId { get; set; }
         public string Name { get; set; }
+
+        public string MoleculeJson { get; set; }
         [NotMapped]
         public List<Chain> SideChains { get; set; }
         [NotMapped]

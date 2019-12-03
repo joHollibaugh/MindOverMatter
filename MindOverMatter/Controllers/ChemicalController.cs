@@ -10,6 +10,8 @@ using Newtonsoft;
 using Newtonsoft.Json;
 using MindOverMatter.Models.ViewModels;
 using Microsoft.AspNet.Identity;
+using MindOverMatter.Models.User;
+using Microsoft.EntityFrameworkCore;
 
 namespace MindOverMatter.Controllers
 {
@@ -65,12 +67,12 @@ namespace MindOverMatter.Controllers
                         Name = "Propane";
                         break;
                 }
-                return PartialView("~/Views/Home/RatingModal.cshtml", new RatingModalModel() { MoleculeId = "10", MoleculeName = Name, UserIdEncrypt = User.Identity.GetUserId() });
+                return PartialView("~/Views/Home/RatingModal.cshtml", new RatingModalModel() { MoleculeName = Name, UserIdEncrypt = User.Identity.GetUserId(), MoleculeJson = input });
             }
             else
             {
                 Molecule mol = scanner.FindLongestChain(convertedList);
-                return PartialView("~/Views/Home/RatingModal.cshtml", new RatingModalModel() { MoleculeId = "10", MoleculeName = mol.getName(_context), UserIdEncrypt = User.Identity.GetUserId() });
+                return PartialView("~/Views/Home/RatingModal.cshtml", new RatingModalModel() { MoleculeName = mol.getName(_context), UserIdEncrypt = User.Identity.GetUserId(), MoleculeJson = input });
             }
         }
         public string GetMoleculeName()
@@ -97,8 +99,26 @@ namespace MindOverMatter.Controllers
             return "In Progress...";
         }
 
-        public ActionResult RateName(string rating)
+        public ActionResult RateName(string rating, string moleculeJson, string name)
         {
+            bool isValid;
+            int score = -1;
+            isValid =  int.TryParse(rating,out score);
+
+            if (isValid)
+            {
+                DbContextOptionsBuilder<ChemicalDbContext> options = new DbContextOptionsBuilder<ChemicalDbContext>();
+                using (var chemicalDbContext = new ChemicalDbContext(options.Options))
+                {
+                    Molecule molecule = new Molecule() { Name = name, MoleculeJson = moleculeJson };
+                    chemicalDbContext.Add(molecule);
+                    chemicalDbContext.SaveChanges();
+
+                    Rating ratingObj = new Rating() { Score = Convert.ToInt32(rating), UserId = this.User.Identity.GetUserId(), MoleculeId = molecule.MoleculeId };
+                    chemicalDbContext.Add(ratingObj);
+                    chemicalDbContext.SaveChanges();
+                }
+            }
 
             return RedirectToAction("Index", "Home");
         }
