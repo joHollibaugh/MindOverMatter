@@ -115,10 +115,10 @@ input[type="button"],input[type="submit"] {
 
 #NameBox {
     align-content: center;
-    width: 80%;
+    width: auto;
     display: flex;
     justify-content: center;
-    margin-left:auto;
+    margin-left: auto;
     margin-right: auto;
     background: #cecece;
     font-size: 2em;
@@ -126,9 +126,12 @@ input[type="button"],input[type="submit"] {
     border: 1px solid blue;
     color: green;
     font-weight: 800;
+    white-space: nowrap;
+    padding: 0px 5px 0px 5px;
 }
 
 .modal {
+    padding: 0px 15px 0px 15px;
     background-color: #c1c1c1;
     position: absolute;
     left: 50%;

@@ -35,7 +35,6 @@ namespace MindOverMatter.Models.Matter
         public string getName(ChemicalDbContext _context)
         {
             Dictionary<int, string> map = new Dictionary<int, string>();
-            int counter = 0;
             foreach (Node n in this.ParentChain.NodeList)
             {
                 if (n.Divergent)
@@ -46,24 +45,42 @@ namespace MindOverMatter.Models.Matter
             var identicalPairs = map.ToLookup(x => x.Value, x => x.Key).Where(x => x.Count() > 1);
             foreach (var item in identicalPairs)
             {
+                string countPrefix = "";
+
                 var keys = item.Aggregate("", (s, v) => s + ", " + v);
-                this.Name += keys + "-Di" + item.Key + "yl";
+                switch (item.Count())
+                {
+                    case 2:
+                        countPrefix = "Di";
+                        break;
+                    case 3:
+                        countPrefix = "Tri";
+                        break;
+                    case 4:
+                        countPrefix = "Tetra";
+                        break;
+                }
+                this.Name += keys + "-" + countPrefix + item.Key + "yl";
                 this.Name.Substring(1);
             }
             foreach(var item in identicalPairs)
             {
-                map.Remove(item.ElementAt(0));
-                map.Remove(item.ElementAt(1));
-
+                item.ToList().ForEach(q => { map.Remove(q); });
             }
             foreach (var item in map)
             {
-                Name += item.Key + "-" + item.Value + "yl";
+                Name += item.Key + "-" + item.Value + "yl" + "-";
+            }
+            if (Equals(this.Name[this.Name.Length-1], "-"))
+            {
+                this.Name = this.Name.Substring(0, this.Name.Length - 2);
             }
 
-
             this.Name += _context.GetPrefixByLength(this.ParentChain.NodeList.Count).Name + "ane";
-           
+           if (Equals(this.Name.Substring(0,1), ","))
+            {
+                this.Name = this.Name.Substring(1);
+            }
             return this.Name;
         }
     }
