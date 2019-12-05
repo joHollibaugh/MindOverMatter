@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MindOverMatter.Models.DbContexts;
 using MindOverMatter.Models.Identity;
 using MindOverMatter.Models.User;
+using MindOverMatter.Models.ViewModels;
 
 namespace MindOverMatter.Controllers
 {
@@ -16,11 +19,13 @@ namespace MindOverMatter.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
         }
 
         public IActionResult LoginPage(IdentityError error)
@@ -53,6 +58,7 @@ namespace MindOverMatter.Controllers
             }
         }
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> RegisterNewUserAsync(User user)
         {
             var newUser = new ApplicationUser() { UserName = user.Username, FirstName = user.FirstName, LastName = user.LastName, Email = user.Email };
@@ -108,6 +114,23 @@ namespace MindOverMatter.Controllers
             {
                 return View("~/Views/Account/LoginPage.cshtml", new User() { Errors = new List<IdentityError> { new IdentityError() { Code = "Invalid Username or password" } } });
             }
+        }
+
+        [Authorize(Roles = "Admin")]
+        public IActionResult AdminPage()
+        {
+            DbContextOptionsBuilder<ChemicalDbContext> options = new DbContextOptionsBuilder<ChemicalDbContext>();
+            using (var chemicalDbContext = new ChemicalDbContext(options.Options))
+            {
+
+                return View("~/Views/Account/Admin.cshtml", new AdminViewModel() {Molecules = chemicalDbContext.Molecules.ToDictionary(q=> q.MoleculeId,q=>q), Ratings = chemicalDbContext.Ratings.ToList() });
+            }
+        }
+
+        [Authorize(Roles ="Admin")]
+        public IActionResult AddAdmin(string username)
+        {
+            return null;
         }
     }
 }
