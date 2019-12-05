@@ -12,6 +12,7 @@ using MindOverMatter.Models.ViewModels;
 using Microsoft.AspNet.Identity;
 using MindOverMatter.Models.User;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MindOverMatter.Controllers
 {
@@ -27,6 +28,7 @@ namespace MindOverMatter.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult getMolecule(string input)
         {
             List<ConvertableMol> Clist = JsonConvert.DeserializeObject<List<ConvertableMol>>(input);
@@ -90,30 +92,8 @@ namespace MindOverMatter.Controllers
                 }
             }
         }
-        public string GetMoleculeName()
-        {
 
-            Node c0 = new Node() { NodeTag = "C0" };
-            Node c1 = new Node() { NodeTag = "C1" };
-            Node c2 = new Node() { NodeTag = "C2" };
-            Node c3 = new Node() { NodeTag = "C3" };
-            Node c4 = new Node() { NodeTag = "C4" };
-            Node c5 = new Node() { NodeTag = "C5" };
-            Node c6 = new Node() { NodeTag = "C6" };
-            c0.Neighbors = new List<Node>() { c1 };
-            c1.Neighbors = new List<Node>() { c0, c2, c4 };
-            c2.Neighbors = new List<Node>() { c1, c3, c5 };
-            c3.Neighbors = new List<Node>() { c2 };
-            c4.Neighbors = new List<Node>() { c1 };
-            c5.Neighbors = new List<Node>() { c2, c6 };
-            c6.Neighbors = new List<Node>() { c5 };
-
-            List<Node> fakeNodes = new List<Node>() { c0, c1, c2, c3, c4, c5, c6 };
-
-            Molecule mol = scanner.FindLongestChain(scanner.GetStartingNodes(fakeNodes));
-            return "In Progress...";
-        }
-
+        [Authorize]
         public ActionResult RateName(string rating, string moleculeJson, string name)
         {
             bool isValid;

@@ -21,7 +21,10 @@
 <body>
     <div id="topBar">
         <div id="LeftHeader">
-            <label id="userInfo">Lorem Ipsum</label>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <label id="userInfo">@User.Identity.Name</label>
+            }
         </div>
         <div id="CenterHeeader">
             <label id="HeaderName">Mind Over Matter</label>
@@ -42,14 +45,19 @@
             @if (!User.Identity.IsAuthenticated)
             {
                 <a href='@Url.Action("LoginPage", "Account")'>Login&nbsp;/&nbsp;Register </a>
+
             }
             else
             {
                 @Html.ActionLink("Home", "Index", "Home")
+                @if (User.IsInRole("Admin"))
+                {
+                    @Html.ActionLink("Administration", "AdminPage", "Account")
+                }
                 @Html.ActionLink("Signout", "Logout", "Account")
             }
 
-</div>
+        </div>
         <div>
             @RenderBody()
         </div>

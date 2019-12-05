@@ -1,0 +1,29 @@
+﻿@using Microsoft.EntityFrameworkCore;
+@using MindOverMatter.Models.User;
+@using MindOverMatter.Models.Matter;
+@using MindOverMatter.Models.ViewModels;
+
+@{
+    ViewBag.Style = "Account.css";
+    Layout = "~/Views/_Layout.csHtml";
+}
+
+@model AdminViewModel
+
+<form id="RatingForm" method="post" action="@Url.Action("AddAdmin", "Account")">
+    <input type="text" name="UserName" />
+    <input type="submit" id="AddNewAdmint" value="Add New Administrator"/>
+</form>
+
+<table>
+    <tr><th>UserId</th><th>Rating Score</th><th>Molecule Name</th><th>Molecule Json</th></tr>
+    @foreach (Rating rating in Model.Ratings)
+    {
+        <tr>
+            <td>@rating.UserId</td>
+            <td>@rating.Score</td>
+            <td>@Model.Molecules[rating.MoleculeId].Name</td>
+            <td>@Model.Molecules[rating.MoleculeId].MoleculeJson</td>
+        </tr>
+    }
+</table>
