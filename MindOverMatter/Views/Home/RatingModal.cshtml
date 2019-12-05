@@ -31,12 +31,11 @@
                 <input id="5" class="star {split:4}" type="radio" value="5" name="rating" />
             </label>
             <input name="moleculeJson" id="moleculeJson" type="hidden" value="@Model.MoleculeJson"/>
-            <input name="name" id="name" type="hidden" value="@Model.MoleculeName"/>
-            
+            <input name="name" id="name" type="hidden" value="@Model.MoleculeName"/>                      
         </div>
         <br />
         <input id="rate" type="submit" value="Submit Rating" />
     </form>
     
 </div>
-
+<input type="hidden" id="MainChainJson" value="@Model.MainChainJson"/>

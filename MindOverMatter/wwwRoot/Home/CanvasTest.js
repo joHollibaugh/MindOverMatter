@@ -63,6 +63,7 @@ function getName(Mol) {
 
         }
         showRating(data);
+        colorMain();
     }
 }
 
@@ -77,6 +78,24 @@ function bindEvents() {
         $('#modal-container').modal('hide');
     })
 }
+
+function colorMain() {
+    debugger;
+    var mainIDs = JSON.parse($('input[id$="MainChainJson"]').val());
+    var pt;
+    for (var i in mainIDs) {
+           var C = Molecule.find(function (obj) {
+                 return obj.ID === mainIDs[i][0];
+        });
+        pt = PointList.find(function (obj) {
+            return obj.x === C.Loc.x && obj.y === C.Loc.y;
+        });
+        circle = new Path.Circle(pt, 7);
+        circle.fillColor = "blue";
+        }
+
+    }
+
 
 function onMouseDown(event) {
     path = new Path();
@@ -122,6 +141,7 @@ function onMouseDown(event) {
 
     }
     paper.Molecule = Molecule;
+    paper.PointList = PointList;
 }
 $.ajaxSetup({
     global: false,

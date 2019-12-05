@@ -71,7 +71,7 @@ namespace MindOverMatter.Models.Matter
             {
                 Name += item.Key + "-" + item.Value + "yl" + "-";
             }
-            if (Equals(this.Name[this.Name.Length-1], "-"))
+            if (this.Name != null && Equals(this.Name[this.Name.Length-1], "-"))
             {
                 this.Name = this.Name.Substring(0, this.Name.Length - 2);
             }

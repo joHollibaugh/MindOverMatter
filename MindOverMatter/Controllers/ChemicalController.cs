@@ -71,8 +71,23 @@ namespace MindOverMatter.Controllers
             }
             else
             {
-                Molecule mol = scanner.FindLongestChain(convertedList);
-                return PartialView("~/Views/Home/RatingModal.cshtml", new RatingModalModel() { MoleculeName = mol.getName(_context), UserIdEncrypt = User.Identity.GetUserId(), MoleculeJson = input });
+                try
+                {
+                    List<string> _mainChainJson = new List<string>();
+                    Molecule mol = scanner.FindLongestChain(convertedList);
+                    foreach(Node n in mol.ParentChain.NodeList)
+                    {
+                        _mainChainJson.Add(n.NodeTag);
+                    }
+                    string[][] jsonChain = _mainChainJson.Select(x => new string[] { x }).ToArray();
+
+                    return PartialView("~/Views/Home/RatingModal.cshtml", new RatingModalModel() { MoleculeName = mol.getName(_context), UserIdEncrypt = User.Identity.GetUserId(), MoleculeJson = input, MainChainJson = JsonConvert.SerializeObject(jsonChain) });
+
+                }
+                catch(Exception ex)
+                {
+                    return PartialView("~/Views/Home/RatingModal.cshtml", new RatingModalModel() { MoleculeName = "Couldn't find a name!", UserIdEncrypt = User.Identity.GetUserId(), MoleculeJson = input });
+                }
             }
         }
         public string GetMoleculeName()
