@@ -57,8 +57,8 @@ namespace MindOverMatter.Controllers
                 return false;
             }
         }
+
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> RegisterNewUserAsync(User user)
         {
             var newUser = new ApplicationUser() { UserName = user.Username, FirstName = user.FirstName, LastName = user.LastName, Email = user.Email };
@@ -127,10 +127,10 @@ namespace MindOverMatter.Controllers
             }
         }
 
-        [Authorize(Roles ="Admin")]
-        public IActionResult AddAdmin(string username)
-        {
-            return null;
-        }
+        //[Authorize(Roles ="Admin")]
+        //public IActionResult AddAdmin(string username)
+        //{
+        //    return null;
+        //}
     }
 }

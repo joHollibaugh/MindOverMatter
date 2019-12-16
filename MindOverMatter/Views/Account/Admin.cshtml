@@ -10,20 +10,20 @@
 
 @model AdminViewModel
 
-<form id="RatingForm" method="post" action="@Url.Action("AddAdmin", "Account")">
+@*<form id="RatingForm" method="post" action="@Url.Action("AddAdmin", "Account")">
     <input type="text" name="UserName" />
     <input type="submit" id="AddNewAdmint" value="Add New Administrator"/>
-</form>
+</form>*@
 
-<table>
+<table class="adminGrid">
     <tr><th>UserId</th><th>Rating Score</th><th>Molecule Name</th><th>Molecule Json</th></tr>
     @foreach (Rating rating in Model.Ratings)
     {
-        <tr>
-            <td>@rating.UserId</td>
-            <td>@rating.Score</td>
-            <td>@Model.Molecules[rating.MoleculeId].Name</td>
-            <td>@Model.Molecules[rating.MoleculeId].MoleculeJson</td>
+        <tr class="adminGrid">
+            <td class="adminGrid">@rating.UserId</td>
+            <td class="adminGrid">@rating.Score</td>
+            <td class="adminGrid">@Model.Molecules[rating.MoleculeId].Name</td>
+            <td class="adminGrid">@Model.Molecules[rating.MoleculeId].MoleculeJson</td>
         </tr>
     }
 </table>
