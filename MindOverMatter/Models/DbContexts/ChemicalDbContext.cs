@@ -16,7 +16,6 @@ namespace MindOverMatter.Models.DbContexts
         {
         }
 
-        public DbSet<Atom> Atoms { get; set; }
         public DbSet<Molecule> Molecules { get; set; }
         public DbSet<Prefix> Prefixes { get; set; }
         public DbSet<Rating> Ratings { get; set; }
@@ -24,7 +23,6 @@ namespace MindOverMatter.Models.DbContexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Atom>().HasKey(x => x.AtomId);
             
             modelBuilder.Entity<Prefix>().HasKey(x => x.PrefixId);
             modelBuilder.Entity<Prefix>().HasData(
@@ -64,12 +62,6 @@ namespace MindOverMatter.Models.DbContexts
         {
             var query = Prefixes.Where(x => x.ChainLength == chainLength);
             return query.First<Prefix>();
-        }
-
-        public Atom GetAtomByName(string name)
-        {
-            var query = Atoms.Where(x => x.Name == name);
-            return query.First<Atom>();
         }
     }
 }

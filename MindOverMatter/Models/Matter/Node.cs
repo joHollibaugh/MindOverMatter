@@ -32,7 +32,6 @@ namespace MindOverMatter.Models.Matter
 
         public string NodeTag { get; set; }
         //Properties
-        public Atom Atom { get; set; }
         //The number of bonds extending from this node
         public int Bonds { get; set; }
 
